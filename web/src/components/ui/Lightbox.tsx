@@ -98,17 +98,22 @@ export function Lightbox({
             onClick={(e) => e.stopPropagation()}
             className="relative flex h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[4px] border border-hairline bg-paper sm:h-[90vh]"
           >
-            <div className="z-10 flex shrink-0 items-center justify-between gap-3 border-b border-hairline bg-paper/95 px-4 py-3.5 backdrop-blur-md sm:gap-4 sm:px-5">
+            <div className="z-10 flex shrink-0 items-start justify-between gap-3 border-b border-hairline bg-paper/95 px-4 py-3.5 backdrop-blur-md sm:gap-4 sm:px-5">
               <div className="min-w-0 flex-1">
                 <span className="block truncate font-mono text-[11px] uppercase tracking-wider text-muted">
                   {activeImage.productLabel}
                 </span>
-                <h4 className="truncate font-serif text-lg font-normal text-ink sm:text-xl">
+                <h4 className="truncate font-serif text-lg leading-snug font-normal text-ink sm:text-xl">
                   {activeImage.title}
                 </h4>
+                {activeImage.caption && (
+                  <p className="mt-1 max-w-3xl font-sans text-xs leading-relaxed text-body sm:text-[13px]">
+                    {activeImage.caption}
+                  </p>
+                )}
               </div>
 
-              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 pt-0.5 sm:gap-2">
                 {canNavigate && currentIndex !== undefined && (
                   <>
                     <button
@@ -174,11 +179,6 @@ export function Lightbox({
                       : "h-auto w-full rounded-[2px] border border-hairline bg-paper"
                   }
                 />
-                {activeImage.caption && (
-                  <p className="mx-auto mt-4 max-w-2xl text-center font-mono text-xs text-muted">
-                    {activeImage.caption}
-                  </p>
-                )}
               </motion.div>
             </div>
           </motion.div>

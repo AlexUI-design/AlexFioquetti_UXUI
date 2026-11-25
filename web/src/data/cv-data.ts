@@ -165,7 +165,8 @@ export const stickyProjects: StickyProject[] = [
               src: "/images/proyecto-01-advanta/club-advanta/club-advanta-loyalty-desktop.png",
               alt: "Club Advanta Landing Loyalty en versión Desktop",
               title: "Club Advanta — Landing Loyalty Desktop",
-              caption: "Landing Loyalty Web — Primer contacto, categorías y registro.",
+              caption:
+                "Primer contacto de productores con el ecosistema: propuesta de valor, categorías y formulario de registro.",
               width: 1282,
               height: 5098,
               productLabel: "Advanta · Club Advanta",
@@ -185,6 +186,34 @@ export const stickyProjects: StickyProject[] = [
             },
             caption:
               "Landing Loyalty Web y Mobile — Primer contacto, categorías de membresía y formulario de registro (\"Sumate al Club\").",
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-club-login",
+                src: "/images/proyecto-01-advanta/club-advanta/club-advanta-login.png",
+                alt: "Pantalla de inicio de sesión compartida para productores y administradores",
+                title: "Flujo Unificado de Acceso y Recuperación",
+                caption:
+                  "Login y recuperación de contraseña compartido entre perfiles de productores y consolas administrativas.",
+                width: 2560,
+                height: 1600,
+                productLabel: "Advanta · Club Advanta",
+              },
+              {
+                id: "p01-club-perfil-black",
+                src: "/images/proyecto-01-advanta/club-advanta/club-advanta-perfil-black.png",
+                alt: "Perfil de productor categoría Black con progreso de bolsas e historial",
+                title: "Perfil de Productor (Categoría Black)",
+                caption:
+                  "Autogestión de productor con seguimiento de bolsas validadas e historial de facturas.",
+                width: 2560,
+                height: 2936,
+                productLabel: "Advanta · Club Advanta",
+                isLong: true,
+              },
+            ],
           },
           {
             type: "hero",
@@ -227,44 +256,16 @@ export const stickyProjects: StickyProject[] = [
             ],
           },
           {
-            type: "pair",
-            images: [
-              {
-                id: "p01-club-perfil-black",
-                src: "/images/proyecto-01-advanta/club-advanta/club-advanta-perfil-black.png",
-                alt: "Perfil de productor categoría Black con progreso de bolsas e historial",
-                title: "Perfil de Productor (Categoría Black)",
-                caption:
-                  "Autogestión de productor con seguimiento de bolsas validadas e historial de facturas.",
-                width: 2560,
-                height: 2936,
-                productLabel: "Advanta · Club Advanta",
-                isLong: true,
-              },
-              {
-                id: "p01-club-comunicaciones-metricas",
-                src: "/images/proyecto-01-advanta/club-advanta/club-advanta-comunicaciones-metricas.png",
-                alt: "Analítica de campañas y comunicaciones enviadas por segmento",
-                title: "Métricas de Comunicaciones",
-                caption:
-                  "Detalle de envíos por segmento, trazabilidad de entrega y detección de errores.",
-                width: 2560,
-                height: 1744,
-                productLabel: "Advanta · Club Advanta",
-              },
-            ],
-          },
-          {
             type: "hero",
             image: {
-              id: "p01-club-login",
-              src: "/images/proyecto-01-advanta/club-advanta/club-advanta-login.png",
-              alt: "Pantalla de inicio de sesión compartida para productores y administradores",
-              title: "Flujo Unificado de Acceso y Recuperación",
+              id: "p01-club-comunicaciones-metricas",
+              src: "/images/proyecto-01-advanta/club-advanta/club-advanta-comunicaciones-metricas.png",
+              alt: "Analítica de campañas y comunicaciones enviadas por segmento",
+              title: "Métricas de Comunicaciones",
               caption:
-                "Login y recuperación de contraseña compartido entre perfiles de productores y consolas administrativas.",
+                "Detalle de envíos por segmento, trazabilidad de entrega y detección de errores.",
               width: 2560,
-              height: 1600,
+              height: 1744,
               productLabel: "Advanta · Club Advanta",
             },
           },
@@ -279,12 +280,11 @@ export const stickyProjects: StickyProject[] = [
           {
             type: "hero",
             image: {
-              id: "p01-biblio-visor-pdf",
-              src: "/images/proyecto-01-advanta/biblioteca/biblioteca-visor-pdf.png",
-              alt: "Visor técnico integrado dentro de Biblioteca Advanta",
-              title: "Visor Documental Integrado",
-              caption:
-                "Lectura directa de manuales y notas agronómicas con etiquetas, compartir por enlace y descarga.",
+              id: "p01-biblio-explorador",
+              src: "/images/proyecto-01-advanta/biblioteca/biblioteca-explorador.png",
+              alt: "Explorador jerárquico de carpetas y archivos en Biblioteca Advanta",
+              title: "Explorador Jerárquico & Privacidad",
+              caption: "Árbol por campaña/cultivo con control de visibilidad Público o Privado.",
               width: 2600,
               height: 1612,
               productLabel: "Advanta · Biblioteca Documental",
@@ -294,22 +294,23 @@ export const stickyProjects: StickyProject[] = [
             type: "pair",
             images: [
               {
-                id: "p01-biblio-explorador",
-                src: "/images/proyecto-01-advanta/biblioteca/biblioteca-explorador.png",
-                alt: "Explorador jerárquico de carpetas y archivos en Biblioteca Advanta",
-                title: "Explorador Jerárquico & Privacidad",
-                caption: "Árbol por campaña/cultivo con control de visibilidad Público o Privado.",
-                width: 2600,
-                height: 1612,
-                productLabel: "Advanta · Biblioteca Documental",
-              },
-              {
                 id: "p01-biblio-filtros-roles",
                 src: "/images/proyecto-01-advanta/biblioteca/biblioteca-filtros-roles.png",
                 alt: "Filtros rápidos por rol Distribuidor o Productor y etiquetas",
                 title: "Filtros Rápidos por Rol & Etiquetas",
                 caption:
                   "Segmentación ágil por acceso (Distribuidor / Productor) y taxonomía técnica.",
+                width: 2600,
+                height: 1612,
+                productLabel: "Advanta · Biblioteca Documental",
+              },
+              {
+                id: "p01-biblio-visor-pdf",
+                src: "/images/proyecto-01-advanta/biblioteca/biblioteca-visor-pdf.png",
+                alt: "Visor técnico integrado dentro de Biblioteca Advanta",
+                title: "Visor Documental Integrado",
+                caption:
+                  "Lectura directa de manuales y notas agronómicas con etiquetas, compartir por enlace y descarga.",
                 width: 2600,
                 height: 1612,
                 productLabel: "Advanta · Biblioteca Documental",
@@ -542,20 +543,6 @@ export const stickyProjects: StickyProject[] = [
           "Portal responsive de autoservicio comercial: validación por CUIT habilitado, tabla de pedidos, cálculo de importes, alertas de stock no disponible y confirmación final.",
         blocks: [
           {
-            type: "hero",
-            image: {
-              id: "p03-scalter-web-panel-hero",
-              src: "/images/proyecto-03-scalter/web/scalter-web-panel-pedidos.png",
-              alt: "Tabla de Gestión de Pedidos Scalter con especificaciones de rollos",
-              title: "Tabla Principal de Gestión de Pedidos",
-              caption:
-                "Vista limpia de artículos cargados con parámetros técnicos (Color, Ancho, Gramaje, Largo, Rollos).",
-              width: 2560,
-              height: 1600,
-              productLabel: "Scalter · Portal Web B2B",
-            },
-          },
-          {
             type: "pair",
             images: [
               {
@@ -569,6 +556,22 @@ export const stickyProjects: StickyProject[] = [
                 productLabel: "Scalter · Portal Web B2B",
               },
               {
+                id: "p03-scalter-web-panel-hero",
+                src: "/images/proyecto-03-scalter/web/scalter-web-panel-pedidos.png",
+                alt: "Tabla de Gestión de Pedidos Scalter con especificaciones de rollos",
+                title: "Tabla Principal de Gestión de Pedidos",
+                caption:
+                  "Vista limpia de artículos cargados con parámetros técnicos (Color, Ancho, Gramaje, Largo, Rollos).",
+                width: 2560,
+                height: 1600,
+                productLabel: "Scalter · Portal Web B2B",
+              },
+            ],
+          },
+          {
+            type: "pair",
+            images: [
+              {
                 id: "p03-scalter-web-cargar",
                 src: "/images/proyecto-03-scalter/web/scalter-web-cargar-articulo.png",
                 alt: "Modal para cargar nuevo artículo con cálculo dinámico del total",
@@ -579,11 +582,6 @@ export const stickyProjects: StickyProject[] = [
                 height: 1942,
                 productLabel: "Scalter · Portal Web B2B",
               },
-            ],
-          },
-          {
-            type: "pair",
-            images: [
               {
                 id: "p03-scalter-web-sin-stock",
                 src: "/images/proyecto-03-scalter/web/scalter-web-error-sin-stock.png",
@@ -595,17 +593,20 @@ export const stickyProjects: StickyProject[] = [
                 height: 1942,
                 productLabel: "Scalter · Portal Web B2B",
               },
-              {
-                id: "p03-scalter-web-finalizar",
-                src: "/images/proyecto-03-scalter/web/scalter-web-finalizar-pedido.png",
-                alt: "Modal de cierre de pedido con campo de comentario opcional",
-                title: "Finalización de Pedido",
-                caption: "Confirmación directa con campo opcional de observaciones comerciales.",
-                width: 2560,
-                height: 1600,
-                productLabel: "Scalter · Portal Web B2B",
-              },
             ],
+          },
+          {
+            type: "hero",
+            image: {
+              id: "p03-scalter-web-finalizar",
+              src: "/images/proyecto-03-scalter/web/scalter-web-finalizar-pedido.png",
+              alt: "Modal de cierre de pedido con campo de comentario opcional",
+              title: "Finalización de Pedido",
+              caption: "Confirmación directa con campo opcional de observaciones comerciales.",
+              width: 2560,
+              height: 1600,
+              productLabel: "Scalter · Portal Web B2B",
+            },
           },
         ],
       },
@@ -641,17 +642,6 @@ export const stickyProjects: StickyProject[] = [
                 isMobile: true,
               },
               {
-                id: "p03-scalter-bot-estado",
-                src: "/images/proyecto-03-scalter/mobile-bot/scalter-bot-estado-pedido.png",
-                alt: "Consulta del estado de pedido en producción desde WhatsApp",
-                title: "Seguimiento en Tiempo Real",
-                caption: "Consulta instantánea de orden en producción.",
-                width: 780,
-                height: 1688,
-                productLabel: "Scalter · Bot WhatsApp",
-                isMobile: true,
-              },
-              {
                 id: "p03-scalter-mobile-cargar",
                 src: "/images/proyecto-03-scalter/mobile-bot/scalter-mobile-cargar-articulo.png",
                 alt: "Adaptación móvil responsive de la tabla de pedidos y alta de artículo",
@@ -662,6 +652,17 @@ export const stickyProjects: StickyProject[] = [
                 productLabel: "Scalter · Web Mobile",
                 isMobile: true,
                 isLong: true,
+              },
+              {
+                id: "p03-scalter-bot-estado",
+                src: "/images/proyecto-03-scalter/mobile-bot/scalter-bot-estado-pedido.png",
+                alt: "Consulta del estado de pedido en producción desde WhatsApp",
+                title: "Seguimiento en Tiempo Real",
+                caption: "Consulta instantánea de orden en producción.",
+                width: 780,
+                height: 1688,
+                productLabel: "Scalter · Bot WhatsApp",
+                isMobile: true,
               },
             ],
           },

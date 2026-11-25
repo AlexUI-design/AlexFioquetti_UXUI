@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import { GalleryRenderer } from "@/components/ui/GalleryRenderer";
 import { Lightbox } from "@/components/ui/Lightbox";
@@ -13,8 +13,8 @@ import {
   ACCORDION_TRANSITION,
   EASE_EDITORIAL,
   PARALLAX_OFFSET_RANGE,
-  STACK_OPACITY_RANGE,
   STACK_SCALE_RANGE,
+  STACK_VEIL_RANGE,
   TAB_TRANSITION,
 } from "@/lib/motion";
 
@@ -35,8 +35,7 @@ function StickyProjectCard({
 }: StickyProjectCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTabId, setActiveTabId] = useState(project.tabs[0]?.id ?? "");
-  const baseTop = 80 + index * 16;
-  const [stickyTop, setStickyTop] = useState(baseTop);
+  const baseTop = 84 + index * 12;
 
   const cardRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -53,70 +52,61 @@ function StickyProjectCard({
     [0, 1],
     isCoveredByNext ? [STACK_SCALE_RANGE[0], STACK_SCALE_RANGE[1]] : [1, 1]
   );
-  const animatedOpacity = useTransform(
+  const veilOpacity = useTransform(
     scrollYProgress,
-    [0, 1],
-    isCoveredByNext ? [STACK_OPACITY_RANGE[0], STACK_OPACITY_RANGE[1]] : [1, 1]
+    [0.15, 1],
+    isCoveredByNext ? [STACK_VEIL_RANGE[0], STACK_VEIL_RANGE[1]] : [0, 0]
   );
   const parallaxY = useTransform(scrollYProgress, [0, 1], [
     PARALLAX_OFFSET_RANGE[0],
     PARALLAX_OFFSET_RANGE[1],
   ]);
 
-  useEffect(() => {
-    const element = cardRef.current;
-    if (!element) return;
-
-    const updateTop = () => {
-      const height = element.getBoundingClientRect().height;
-      const computedTop = Math.min(baseTop, window.innerHeight - height - 24);
-      setStickyTop(computedTop);
-    };
-
-    updateTop();
-    const observer = new ResizeObserver(() => {
-      updateTop();
-    });
-    observer.observe(element);
-    window.addEventListener("resize", updateTop);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateTop);
-    };
-  }, [baseTop]);
-
   const activeTab = project.tabs.find((tab) => tab.id === activeTabId) ?? project.tabs[0];
   const zIndexClass = STICKY_Z_INDEX[index] ?? "z-30";
+
+  const overlapShadowClass =
+    index > 0
+      ? "shadow-[0_-14px_36px_-18px_rgba(23,23,21,0.14),0_8px_24px_-16px_rgba(23,23,21,0.08)]"
+      : "";
+
+  const handleCollapseFromBar = () => {
+    setIsOpen(false);
+    requestAnimationFrame(() => {
+      cardRef.current?.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+  };
 
   return (
     <motion.article
       id={project.id}
       ref={cardRef}
       style={{
-        top: `${stickyTop}px`,
-        scale: prefersReducedMotion ? 1 : animatedScale,
-        opacity: prefersReducedMotion ? 1 : animatedOpacity,
+        top: isOpen ? undefined : `${baseTop}px`,
+        scale: prefersReducedMotion || isOpen ? 1 : animatedScale,
       }}
-      className={`sticky ${zIndexClass} origin-top scroll-mt-24 rounded-[4px] border border-hairline bg-card-stage p-5 will-change-transform sm:p-8`}
+      className={`${isOpen ? "relative" : "sticky"} ${zIndexClass} origin-top scroll-mt-24 rounded-[4px] border border-hairline bg-card-stage p-4 will-change-transform sm:px-7 sm:py-5 ${overlapShadowClass}`}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-3">
         <span className="font-mono text-xs font-medium tracking-wider text-ink">
           {project.tag}
         </span>
         <span className="font-mono text-xs tracking-wider text-muted">{project.metadata}</span>
       </div>
 
-      <h3 className="mt-5 font-serif text-[clamp(28px,4.5vw,52px)] leading-[1.08] font-normal tracking-[-0.02em] text-ink">
+      <h3 className="mt-3 font-serif text-[clamp(24px,3vw,38px)] leading-[1.1] font-normal tracking-[-0.02em] text-ink">
         {project.title}
       </h3>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <button
           type="button"
           onClick={() => onOpenLightbox(project.cover)}
           aria-label={`Ampliar portada de ${project.title}`}
-          className="group relative block aspect-[16/10] h-[45vh] max-h-[760px] w-full cursor-zoom-in overflow-hidden rounded-[2px] border border-hairline bg-paper text-left sm:h-[66vh]"
+          className="group relative block h-[36vh] min-h-[220px] max-h-[440px] w-full cursor-zoom-in overflow-hidden rounded-[2px] border border-hairline bg-paper text-left sm:h-[42vh] lg:h-[45vh]"
         >
           <motion.div
             style={{ y: prefersReducedMotion ? 0 : parallaxY }}
@@ -138,28 +128,40 @@ function StickyProjectCard({
         </button>
       </div>
 
-      <p className="mt-6 max-w-4xl font-sans text-[15px] leading-relaxed text-body sm:text-base">
+      <p className="mt-4 max-w-4xl font-sans text-sm leading-relaxed text-body sm:text-[15px]">
         {project.summary}
       </p>
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-hairline/70 pt-5">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-hairline/70 pt-4">
         <p className="font-mono text-[11px] tracking-wider text-muted">
           {project.chips.join(" · ")}
         </p>
 
-        <button
-          type="button"
-          onClick={() => setIsOpen((prev) => !prev)}
-          aria-expanded={isOpen}
-          className="inline-flex items-center gap-2 rounded-[2px] border border-hairline bg-paper px-4 py-2 font-mono text-xs tracking-wider text-ink transition-all hover:border-ink hover:bg-ink hover:text-paper"
-        >
-          <span>{isOpen ? "Ocultar caso de estudio" : "Explorar caso de estudio"}</span>
-          <ChevronDown
-            className={`h-4 w-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
-            strokeWidth={1.5}
-          />
-        </button>
+        {!isOpen && (
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-expanded={false}
+            className="inline-flex items-center gap-2 rounded-[2px] border border-ink bg-ink px-5 py-2.5 font-mono text-xs font-medium tracking-wider text-paper transition-opacity hover:opacity-85"
+          >
+            <span>Explorar caso de estudio</span>
+            <ChevronDown className="h-4 w-4" strokeWidth={1.75} />
+          </button>
+        )}
       </div>
+
+      {isOpen && (
+        <div className="sticky top-[72px] z-30 -mx-4 mt-5 border-y border-hairline bg-card-stage/95 px-4 py-2.5 backdrop-blur-md sm:-mx-7 sm:px-7">
+          <div className="min-w-0">
+            <span className="block truncate font-mono text-[10px] tracking-wider text-body/80">
+              {project.tag}
+            </span>
+            <p className="truncate font-serif text-base leading-tight text-ink sm:text-lg">
+              {project.title}
+            </p>
+          </div>
+        </div>
+      )}
 
       <motion.div
         initial={false}
@@ -171,27 +173,27 @@ function StickyProjectCard({
         onAnimationComplete={() => resize()}
         className="overflow-hidden"
       >
-        <div className="mt-6 border-t border-hairline pt-6">
+        <div className="pt-6">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div className="space-y-5 lg:col-span-7">
+            <div className="space-y-6 lg:col-span-7">
               <div>
-                <h4 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                <h4 className="font-serif text-xl leading-snug font-medium tracking-[-0.01em] text-ink sm:text-[22px]">
                   El Desafío
                 </h4>
-                <p className="mt-1.5 font-sans text-sm leading-relaxed text-body">
+                <p className="mt-2 font-sans text-[15px] leading-relaxed text-body">
                   {project.challenge}
                 </p>
               </div>
               <div>
-                <h4 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                <h4 className="font-serif text-xl leading-snug font-medium tracking-[-0.01em] text-ink sm:text-[22px]">
                   Aportes y Rol de Alex
                 </h4>
-                <ul className="mt-2 space-y-2 font-sans text-sm leading-relaxed text-body">
+                <ul className="mt-2.5 space-y-2.5 font-sans text-[15px] leading-relaxed text-body">
                   {project.roleContributions.map((item) => (
                     <li key={item} className="flex items-start gap-2.5">
                       <span
                         aria-hidden="true"
-                        className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink"
+                        className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-ink"
                       />
                       <span>{item}</span>
                     </li>
@@ -200,20 +202,20 @@ function StickyProjectCard({
               </div>
             </div>
 
-            <div className="space-y-5 border-t border-hairline pt-5 lg:col-span-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+            <div className="space-y-6 border-t border-hairline pt-6 lg:col-span-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
               <div>
-                <h4 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                <h4 className="font-serif text-xl leading-snug font-medium tracking-[-0.01em] text-ink sm:text-[22px]">
                   Impacto y Resultado
                 </h4>
-                <p className="mt-1.5 font-sans text-sm leading-relaxed text-body">
+                <p className="mt-2 font-sans text-[15px] leading-relaxed text-body">
                   {project.impact}
                 </p>
               </div>
               <div>
-                <h4 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                <h4 className="font-serif text-xl leading-snug font-medium tracking-[-0.01em] text-ink sm:text-[22px]">
                   Stack de Diseño
                 </h4>
-                <p className="mt-2 font-mono text-[11px] leading-relaxed tracking-wider text-ink">
+                <p className="mt-2 font-mono text-xs font-medium leading-relaxed tracking-wider text-ink">
                   {project.designStack.join(" · ")}
                 </p>
               </div>
@@ -224,10 +226,12 @@ function StickyProjectCard({
             <div className="mt-8 border-t border-hairline pt-6">
               <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
                 <div className="max-w-2xl">
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                  <h4 className="font-serif text-xl leading-snug font-medium tracking-[-0.01em] text-ink sm:text-[22px]">
                     Galería del Ecosistema
-                  </span>
-                  <p className="mt-1 font-sans text-sm text-body">{activeTab.description}</p>
+                  </h4>
+                  <p className="mt-1.5 font-sans text-[15px] leading-relaxed text-body">
+                    {activeTab.description}
+                  </p>
                 </div>
 
                 <div
@@ -244,15 +248,15 @@ function StickyProjectCard({
                         role="tab"
                         aria-selected={isActive}
                         onClick={() => setActiveTabId(tab.id)}
-                        className={`relative shrink-0 whitespace-nowrap py-2 font-mono text-xs tracking-wider transition-colors ${
-                          isActive ? "font-medium text-ink" : "text-muted hover:text-ink"
+                        className={`relative shrink-0 whitespace-nowrap py-2.5 font-mono text-xs tracking-wider transition-colors sm:text-[13px] ${
+                          isActive ? "font-semibold text-ink" : "text-body/80 hover:text-ink"
                         }`}
                       >
                         <span>{tab.label}</span>
                         {isActive && (
                           <span
                             aria-hidden="true"
-                            className="absolute right-0 bottom-0 left-0 h-[1.5px] bg-ink"
+                            className="absolute right-0 bottom-0 left-0 h-[2px] bg-ink"
                           />
                         )}
                       </button>
@@ -282,6 +286,29 @@ function StickyProjectCard({
           )}
         </div>
       </motion.div>
+
+      {isOpen && (
+        <div className="pointer-events-none sticky bottom-5 z-40 mt-6 flex justify-end">
+          <button
+            type="button"
+            onClick={handleCollapseFromBar}
+            aria-expanded={true}
+            aria-label={`Ocultar caso de estudio de ${project.title}`}
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-[2px] border border-paper/25 bg-ink px-5 py-2.5 font-mono text-xs font-medium tracking-wider text-paper shadow-[0_12px_28px_-8px_rgba(23,23,21,0.45)] transition-opacity hover:opacity-90"
+          >
+            <span>Ocultar caso de estudio</span>
+            <ChevronUp className="h-4 w-4" strokeWidth={1.75} />
+          </button>
+        </div>
+      )}
+
+      {isCoveredByNext && !prefersReducedMotion && !isOpen && (
+        <motion.div
+          aria-hidden="true"
+          style={{ opacity: veilOpacity }}
+          className="pointer-events-none absolute inset-0 z-20 rounded-[inherit] bg-card-stage"
+        />
+      )}
     </motion.article>
   );
 }
@@ -295,8 +322,6 @@ function getProjectGalleryImages(project: StickyProject): GalleryImage[] {
     seenSrc.add(img.src);
     ordered.push(img);
   };
-
-  appendImage(project.cover);
 
   for (const tab of project.tabs) {
     for (const block of tab.blocks) {
@@ -315,6 +340,8 @@ function getProjectGalleryImages(project: StickyProject): GalleryImage[] {
       }
     }
   }
+
+  appendImage(project.cover);
 
   return ordered;
 }
