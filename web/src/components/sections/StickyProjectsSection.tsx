@@ -286,8 +286,55 @@ function StickyProjectCard({
   );
 }
 
+function getProjectGalleryImages(project: StickyProject): GalleryImage[] {
+  const ordered: GalleryImage[] = [];
+  const seenSrc = new Set<string>();
+
+  const appendImage = (img: GalleryImage) => {
+    if (seenSrc.has(img.src)) return;
+    seenSrc.add(img.src);
+    ordered.push(img);
+  };
+
+  appendImage(project.cover);
+
+  for (const tab of project.tabs) {
+    for (const block of tab.blocks) {
+      if (block.type === "hero") {
+        appendImage(block.image);
+      } else if (block.type === "pair") {
+        appendImage(block.images[0]);
+        appendImage(block.images[1]);
+      } else if (block.type === "responsive-showcase") {
+        appendImage(block.desktop);
+        appendImage(block.mobile);
+      } else if (block.type === "mobile-strip") {
+        for (const img of block.images) {
+          appendImage(img);
+        }
+      }
+    }
+  }
+
+  return ordered;
+}
+
 export function StickyProjectsSection() {
-  const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
+  const [lightboxState, setLightboxState] = useState<{
+    images: GalleryImage[];
+    index: number;
+  } | null>(null);
+
+  const handleOpenLightbox = (project: StickyProject, clickedImage: GalleryImage) => {
+    const images = getProjectGalleryImages(project);
+    const matchedIndex = images.findIndex(
+      (img) => img.id === clickedImage.id || img.src === clickedImage.src
+    );
+    setLightboxState({
+      images,
+      index: matchedIndex >= 0 ? matchedIndex : 0,
+    });
+  };
 
   return (
     <section
@@ -312,12 +359,19 @@ export function StickyProjectsSection() {
             project={project}
             index={index}
             total={stickyProjects.length}
-            onOpenLightbox={setLightboxImage}
+            onOpenLightbox={(image) => handleOpenLightbox(project, image)}
           />
         ))}
       </div>
 
-      <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+      <Lightbox
+        images={lightboxState?.images}
+        currentIndex={lightboxState?.index}
+        onNavigate={(nextIndex) =>
+          setLightboxState((prev) => (prev ? { ...prev, index: nextIndex } : null))
+        }
+        onClose={() => setLightboxState(null)}
+      />
     </section>
   );
 }

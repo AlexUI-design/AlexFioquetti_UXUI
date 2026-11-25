@@ -35,6 +35,7 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
       smoothWheel: true,
       touchMultiplier: 1.5,
       autoResize: true,
+      prevent: (node) => Boolean(node.closest?.("[data-lenis-prevent]")),
     });
 
     lenisRef.current = lenis;
