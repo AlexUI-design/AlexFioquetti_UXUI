@@ -45,16 +45,15 @@ const stickyProjectsEn: StickyProject[] = [
       "End-to-end UX/UI design leadership orchestrating Advanta's digital ecosystem: Loyalty Club (web loyalty, self-service & backoffice), anti-silo Document Library, Conversational Chatbot, and its administrative console.",
     chips: ["MVP Phase 2 (1 Year)", "5-Person Squad (Core Pod)", "Daily Scrum"],
     cover: {
-      id: "p01-club-loyalty-desktop",
-      src: "/images/proyecto-01-advanta/club-advanta/club-advanta-loyalty-desktop.png",
-      alt: "Club Advanta Web Loyalty Landing — Plant Advanta, Harvest Benefits",
-      title: "Club Advanta — Web Loyalty Landing",
+      id: "p01-bobot-campanas-listado",
+      src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campanas-listado.png",
+      alt: "WhatsApp Campaigns overview dashboard with balance KPIs, sent messages, active campaigns, and status table",
+      title: "WhatsApp Campaigns — Overview & Metrics",
       caption:
-        "Growers' first touchpoint with the ecosystem: value proposition, membership tiers, and registration form.",
-      width: 1282,
-      height: 5098,
-      productLabel: "Advanta · Club Advanta",
-      isLong: true,
+        "Main dashboard tracking available balance, messages sent, \"Yes\" response rate, global opt-out list, filters, and a table spanning 7 lifecycle states.",
+      width: 2600,
+      height: 1572,
+      productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
     },
     challenge:
       "Unify multiple independent products under a single brand and permissions architecture serving different user tiers (Growers, Distributors, and Administrators), eliminating information silos and operational friction across invoice uploads, reward redemption, and technical inquiries.",
@@ -67,6 +66,154 @@ const stickyProjectsEn: StickyProject[] = [
       "Sustained engagement across a ~1-year continuous cycle leading to the MVP Phase 2 launch, with five interconnected solutions operating in visual and functional harmony.",
     designStack: ["Figma", "Atomic Design", "Jira", "Scrum", "UX Writing", "Role Architecture"],
     tabs: [
+      {
+        id: "bo-del-bot",
+        label: "Bot Backoffice",
+        description:
+          "Backoffice console for the conversational assistant: WhatsApp Campaigns module to track metrics, configure campaigns with conditional validations, and import approved recipients with transparent cost estimates, alongside CRUD management of distributors, advisors, and administrators.",
+        blocks: [
+          {
+            type: "hero",
+            image: {
+              id: "p01-bobot-campanas-listado",
+              src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campanas-listado.png",
+              alt: "WhatsApp Campaigns overview dashboard with balance KPIs, sent messages, active campaigns, and status table",
+              title: "WhatsApp Campaigns — Overview & Metrics",
+              caption:
+                "Main dashboard tracking available balance, messages sent, \"Yes\" response rate, global opt-out list, filters, and a table spanning 7 lifecycle states.",
+              width: 2600,
+              height: 1572,
+              productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+            },
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-campana-crear-base",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-crear-base.png",
+                alt: "Create new WhatsApp campaign form with interactive Yes/No bot reply configuration",
+                title: "Campaign Creation (Interactive Flow)",
+                caption:
+                  "Four-section form covering basic details, optional flyer upload, 1024-character message composer, and automated Yes/No bot responses.",
+                width: 2560,
+                height: 2774,
+                isLong: true,
+                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+              },
+              {
+                id: "p01-bobot-campana-error-flyer",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-error-flyer.png",
+                alt: "Validation error state when uploading an invalid flyer and optional fallback email input",
+                title: "File Validation & Fallback Routing",
+                caption:
+                  "Preventive upload error for unsupported formats or sizes over 5 MB (JPG/PNG) paired with an optional fallback email when no sales rep covers a zone.",
+                width: 2560,
+                height: 2958,
+                isLong: true,
+                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+              },
+            ],
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-campana-informativa",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-informativa.png",
+                alt: "Informative campaign variant showing uploaded flyer preview and disabled bot section",
+                title: "Informative Variant & Flyer Preview",
+                caption:
+                  "Attached asset preview with replace/remove controls and conditional logic that disables bot auto-replies for purely informative campaigns.",
+                width: 2560,
+                height: 2922,
+                isLong: true,
+                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+              },
+              {
+                id: "p01-bobot-campana-modal-borrador",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-modal-borrador.png",
+                alt: "Confirmation modal to save a WhatsApp campaign as draft",
+                title: "Save Draft Confirmation Modal",
+                caption:
+                  "Safeguard modal letting admins pause creation and resume editing, upload recipients, or submit for approval later.",
+                width: 2560,
+                height: 2922,
+                isLong: true,
+                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+              },
+            ],
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-campana-carga-destinatarios",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-carga-destinatarios.png",
+                alt: "Step 1 recipient upload for an approved campaign with Excel template and CSV dropzone",
+                title: "Approved Campaign — Recipient Upload",
+                caption:
+                  "Step 1 after commercial approval with a downloadable .xlsx template, .xlsx/.csv upload up to 10 MB, and prefix normalization / opt-out notice.",
+                width: 2560,
+                height: 2276,
+                isLong: true,
+                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+              },
+              {
+                id: "p01-bobot-campana-revision-costos",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-revision-costos.png",
+                alt: "Step 2 validation summary with excluded numbers export, batch sending policy, and Meta/Twilio cost estimator",
+                title: "Validation, Cost Estimate & Confirmation",
+                caption:
+                  "Step 2 summarizing valid, opted-out, and invalid rows with CSV export, batched sending policy to protect Meta quality rating, and Meta + Twilio cost breakdown.",
+                width: 2560,
+                height: 2642,
+                isLong: true,
+                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
+              },
+            ],
+          },
+          {
+            type: "hero",
+            image: {
+              id: "p01-bobot-distribuidores",
+              src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-distribuidores.png",
+              alt: "CRUD table of 300 distributors in Bot Backoffice",
+              title: "Distributor CRUD Console",
+              caption:
+                "Management of 300 distributors by tax ID and region with Active/Inactive states and CSV export.",
+              width: 2600,
+              height: 1764,
+              productLabel: "Advanta · Bot Backoffice",
+            },
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-administradores",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-administradores.png",
+                alt: "Table of authorized administrators in Bot Backoffice",
+                title: "Administrator Management",
+                caption: "Directory, email search, and administrative access control.",
+                width: 2600,
+                height: 1616,
+                productLabel: "Advanta · Bot Backoffice",
+              },
+              {
+                id: "p01-bobot-nuevo-admin",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-nuevo-admin.png",
+                alt: "Modal for adding a new administrator with password rules",
+                title: "Guided Admin Creation",
+                caption: "Modal form with real-time password policy validation.",
+                width: 2600,
+                height: 1612,
+                productLabel: "Advanta · Bot Backoffice",
+              },
+            ],
+          },
+        ],
+      },
       {
         id: "club-advanta",
         label: "Club Advanta",
@@ -229,154 +376,6 @@ const stickyProjectsEn: StickyProject[] = [
                 width: 2600,
                 height: 1612,
                 productLabel: "Advanta · Document Library",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "bo-del-bot",
-        label: "Bot Backoffice",
-        description:
-          "Backoffice console for managing authorized distributors, advisors, and administrators within the conversational assistant, alongside the WhatsApp Campaigns module to track metrics, configure campaigns with conditional validations, and import approved recipients with transparent cost estimates.",
-        blocks: [
-          {
-            type: "hero",
-            image: {
-              id: "p01-bobot-distribuidores",
-              src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-distribuidores.png",
-              alt: "CRUD table of 300 distributors in Bot Backoffice",
-              title: "Distributor CRUD Console",
-              caption:
-                "Management of 300 distributors by tax ID and region with Active/Inactive states and CSV export.",
-              width: 2600,
-              height: 1764,
-              productLabel: "Advanta · Bot Backoffice",
-            },
-          },
-          {
-            type: "pair",
-            images: [
-              {
-                id: "p01-bobot-administradores",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-administradores.png",
-                alt: "Table of authorized administrators in Bot Backoffice",
-                title: "Administrator Management",
-                caption: "Directory, email search, and administrative access control.",
-                width: 2600,
-                height: 1616,
-                productLabel: "Advanta · Bot Backoffice",
-              },
-              {
-                id: "p01-bobot-nuevo-admin",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-nuevo-admin.png",
-                alt: "Modal for adding a new administrator with password rules",
-                title: "Guided Admin Creation",
-                caption: "Modal form with real-time password policy validation.",
-                width: 2600,
-                height: 1612,
-                productLabel: "Advanta · Bot Backoffice",
-              },
-            ],
-          },
-          {
-            type: "hero",
-            image: {
-              id: "p01-bobot-campanas-listado",
-              src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campanas-listado.png",
-              alt: "WhatsApp Campaigns overview dashboard with balance KPIs, sent messages, active campaigns, and status table",
-              title: "WhatsApp Campaigns — Overview & Metrics",
-              caption:
-                "Main dashboard tracking available balance, messages sent, \"Yes\" response rate, global opt-out list, filters, and a table spanning 7 lifecycle states.",
-              width: 2600,
-              height: 1572,
-              productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
-            },
-          },
-          {
-            type: "pair",
-            images: [
-              {
-                id: "p01-bobot-campana-crear-base",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-crear-base.png",
-                alt: "Create new WhatsApp campaign form with interactive Yes/No bot reply configuration",
-                title: "Campaign Creation (Interactive Flow)",
-                caption:
-                  "Four-section form covering basic details, optional flyer upload, 1024-character message composer, and automated Yes/No bot responses.",
-                width: 2560,
-                height: 2774,
-                isLong: true,
-                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
-              },
-              {
-                id: "p01-bobot-campana-error-flyer",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-error-flyer.png",
-                alt: "Validation error state when uploading an invalid flyer and optional fallback email input",
-                title: "File Validation & Fallback Routing",
-                caption:
-                  "Preventive upload error for unsupported formats or sizes over 5 MB (JPG/PNG) paired with an optional fallback email when no sales rep covers a zone.",
-                width: 2560,
-                height: 2958,
-                isLong: true,
-                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
-              },
-            ],
-          },
-          {
-            type: "pair",
-            images: [
-              {
-                id: "p01-bobot-campana-informativa",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-informativa.png",
-                alt: "Informative campaign variant showing uploaded flyer preview and disabled bot section",
-                title: "Informative Variant & Flyer Preview",
-                caption:
-                  "Attached asset preview with replace/remove controls and conditional logic that disables bot auto-replies for purely informative campaigns.",
-                width: 2560,
-                height: 2922,
-                isLong: true,
-                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
-              },
-              {
-                id: "p01-bobot-campana-modal-borrador",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-modal-borrador.png",
-                alt: "Confirmation modal to save a WhatsApp campaign as draft",
-                title: "Save Draft Confirmation Modal",
-                caption:
-                  "Safeguard modal letting admins pause creation and resume editing, upload recipients, or submit for approval later.",
-                width: 2560,
-                height: 2922,
-                isLong: true,
-                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
-              },
-            ],
-          },
-          {
-            type: "pair",
-            images: [
-              {
-                id: "p01-bobot-campana-carga-destinatarios",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-carga-destinatarios.png",
-                alt: "Step 1 recipient upload for an approved campaign with Excel template and CSV dropzone",
-                title: "Approved Campaign — Recipient Upload",
-                caption:
-                  "Step 1 after commercial approval with a downloadable .xlsx template, .xlsx/.csv upload up to 10 MB, and prefix normalization / opt-out notice.",
-                width: 2560,
-                height: 2276,
-                isLong: true,
-                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
-              },
-              {
-                id: "p01-bobot-campana-revision-costos",
-                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-revision-costos.png",
-                alt: "Step 2 validation summary with excluded numbers export, batch sending policy, and Meta/Twilio cost estimator",
-                title: "Validation, Cost Estimate & Confirmation",
-                caption:
-                  "Step 2 summarizing valid, opted-out, and invalid rows with CSV export, batched sending policy to protect Meta quality rating, and Meta + Twilio cost breakdown.",
-                width: 2560,
-                height: 2642,
-                isLong: true,
-                productLabel: "Advanta · Bot Backoffice · WhatsApp Campaigns",
               },
             ],
           },
