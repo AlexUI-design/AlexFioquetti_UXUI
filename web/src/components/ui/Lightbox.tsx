@@ -9,10 +9,19 @@ import type { GalleryImage } from "@/data/cv-data";
 import { getUiCopy } from "@/data/ui-copy";
 import { EASE_EDITORIAL } from "@/lib/motion";
 
+export interface LightboxSectionTab {
+  id: string;
+  label: string;
+  startIndex: number;
+  endIndex: number;
+}
+
 interface LightboxProps {
   image?: GalleryImage | null;
   images?: GalleryImage[];
   currentIndex?: number;
+  tabs?: LightboxSectionTab[];
+  tabsAriaLabel?: string;
   onNavigate?: (index: number) => void;
   onClose: () => void;
 }
@@ -21,6 +30,8 @@ export function Lightbox({
   image,
   images,
   currentIndex,
+  tabs,
+  tabsAriaLabel,
   onNavigate,
   onClose,
 }: LightboxProps) {
@@ -29,6 +40,7 @@ export function Lightbox({
   const copy = getUiCopy(locale).lightbox;
   const prefersReducedMotion = useReducedMotion();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const tabButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const [navDirection, setNavDirection] = useState<1 | -1 | 0>(0);
   const onCloseRef = useRef(onClose);
@@ -39,6 +51,37 @@ export function Lightbox({
   const totalImages = hasGallery ? images!.length : activeImage ? 1 : 0;
   const canNavigate = hasGallery && totalImages > 1 && Boolean(onNavigate);
   const isOpen = Boolean(activeImage);
+  const showTabs = Boolean(
+    canNavigate && typeof currentIndex === "number" && tabs && tabs.length > 1
+  );
+  const activeTab = showTabs
+    ? (tabs!.find((tab) => currentIndex! >= tab.startIndex && currentIndex! <= tab.endIndex) ??
+      tabs![0])
+    : null;
+
+  const handlePrev = () => {
+    if (!canNavigate || currentIndex === undefined || !onNavigate) return;
+    setNavDirection(-1);
+    onNavigate((currentIndex - 1 + totalImages) % totalImages);
+  };
+
+  const handleNext = () => {
+    if (!canNavigate || currentIndex === undefined || !onNavigate) return;
+    setNavDirection(1);
+    onNavigate((currentIndex + 1) % totalImages);
+  };
+
+  const handleSelectTab = (tab: LightboxSectionTab) => {
+    if (!canNavigate || currentIndex === undefined || !onNavigate) return;
+    if (activeTab?.id === tab.id && currentIndex === tab.startIndex) return;
+    setNavDirection(tab.startIndex > currentIndex ? 1 : tab.startIndex < currentIndex ? -1 : 0);
+    onNavigate(tab.startIndex);
+  };
+
+  const handlePrevRef = useRef(handlePrev);
+  handlePrevRef.current = handlePrev;
+  const handleNextRef = useRef(handleNext);
+  handleNextRef.current = handleNext;
 
   useEffect(() => {
     if (!isOpen) {
@@ -55,6 +98,10 @@ export function Lightbox({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onCloseRef.current();
+      } else if (event.key === "ArrowLeft") {
+        handlePrevRef.current();
+      } else if (event.key === "ArrowRight") {
+        handleNextRef.current();
       }
     };
 
@@ -73,17 +120,15 @@ export function Lightbox({
     scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
   }, [activeImage?.id, activeImage?.src]);
 
-  const handlePrev = () => {
-    if (!canNavigate || currentIndex === undefined || !onNavigate) return;
-    setNavDirection(-1);
-    onNavigate((currentIndex - 1 + totalImages) % totalImages);
-  };
-
-  const handleNext = () => {
-    if (!canNavigate || currentIndex === undefined || !onNavigate) return;
-    setNavDirection(1);
-    onNavigate((currentIndex + 1) % totalImages);
-  };
+  useEffect(() => {
+    if (!activeTab?.id) return;
+    const button = tabButtonRefs.current[activeTab.id];
+    button?.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      inline: "nearest",
+      block: "nearest",
+    });
+  }, [activeTab?.id, prefersReducedMotion]);
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     if (!canNavigate || event.touches.length !== 1) {
@@ -142,7 +187,11 @@ export function Lightbox({
             onClick={(e) => e.stopPropagation()}
             className="relative flex h-[100dvh] w-full flex-col overflow-hidden rounded-none border-0 bg-paper sm:h-[90vh] sm:max-w-5xl sm:rounded-[4px] sm:border sm:border-hairline"
           >
-            <div className="z-10 shrink-0 border-b border-hairline bg-paper/95 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 backdrop-blur-md sm:px-5 sm:py-3.5">
+            <div
+              className={`z-10 shrink-0 border-b border-hairline bg-paper/95 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-md sm:px-5 sm:pt-3.5 ${
+                showTabs ? "pb-0" : "pb-3 sm:pb-3.5"
+              }`}
+            >
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 sm:items-start sm:gap-x-4 sm:gap-y-0">
                 <span className="col-start-1 row-start-1 truncate font-mono text-[10px] uppercase tracking-wider text-muted sm:text-[11px]">
                   {activeImage.productLabel}
@@ -200,6 +249,41 @@ export function Lightbox({
                   )}
                 </div>
               </div>
+
+              {showTabs && tabs && (
+                <div
+                  role="tablist"
+                  aria-label={tabsAriaLabel}
+                  className="-mx-4 mt-2.5 flex flex-nowrap items-center gap-5 overflow-x-auto border-t border-hairline/70 px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-5 sm:mt-3 sm:gap-6 sm:px-5"
+                >
+                  {tabs.map((tab) => {
+                    const isActive = tab.id === activeTab?.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        ref={(el) => {
+                          tabButtonRefs.current[tab.id] = el;
+                        }}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => handleSelectTab(tab)}
+                        className={`relative flex min-h-[40px] shrink-0 items-center whitespace-nowrap py-2 font-mono text-[11px] tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink sm:text-[12.5px] ${
+                          isActive ? "font-semibold text-ink" : "text-body/80 hover:text-ink"
+                        }`}
+                      >
+                        <span>{tab.label}</span>
+                        {isActive && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute right-0 bottom-0 left-0 h-[2px] bg-ink"
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div

@@ -7,7 +7,7 @@ import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import { GalleryRenderer } from "@/components/ui/GalleryRenderer";
-import { Lightbox } from "@/components/ui/Lightbox";
+import { Lightbox, type LightboxSectionTab } from "@/components/ui/Lightbox";
 import { SplitText } from "@/components/ui/SplitText";
 import type { GalleryImage, StickyProject } from "@/data/cv-data";
 import { getLocalizedCvData } from "@/data/cv-data-en";
@@ -25,6 +25,8 @@ interface StickyProjectCardProps {
   project: StickyProject;
   index: number;
   total: number;
+  activeTabId: string;
+  onSelectTab: (tabId: string) => void;
   onOpenLightbox: (image: GalleryImage) => void;
   onOpenChange: (projectId: string, open: boolean) => void;
 }
@@ -35,6 +37,8 @@ function StickyProjectCard({
   project,
   index,
   total,
+  activeTabId,
+  onSelectTab,
   onOpenLightbox,
   onOpenChange,
 }: StickyProjectCardProps) {
@@ -42,7 +46,6 @@ function StickyProjectCard({
   const [isCollapsing, setIsCollapsing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [isStickyBarVisible, setIsStickyBarVisible] = useState(false);
-  const [activeTabId, setActiveTabId] = useState(project.tabs[0]?.id ?? "");
   const baseTop = 84 + index * 12;
 
   const cardRef = useRef<HTMLElement>(null);
@@ -366,7 +369,7 @@ function StickyProjectCard({
                         type="button"
                         role="tab"
                         aria-selected={isActive}
-                        onClick={() => setActiveTabId(tab.id)}
+                        onClick={() => onSelectTab(tab.id)}
                         className={`relative shrink-0 whitespace-nowrap py-2.5 font-mono text-xs tracking-wider transition-colors sm:text-[13px] ${
                           isActive ? "font-semibold text-ink" : "text-body/80 hover:text-ink"
                         }`}
@@ -433,8 +436,14 @@ function StickyProjectCard({
   );
 }
 
-function getProjectGalleryImages(project: StickyProject): GalleryImage[] {
+interface ProjectGalleryData {
+  images: GalleryImage[];
+  tabs: LightboxSectionTab[];
+}
+
+function getProjectGalleryData(project: StickyProject): ProjectGalleryData {
   const ordered: GalleryImage[] = [];
+  const tabs: LightboxSectionTab[] = [];
   const seenSrc = new Set<string>();
 
   const appendImage = (img: GalleryImage) => {
@@ -444,6 +453,7 @@ function getProjectGalleryImages(project: StickyProject): GalleryImage[] {
   };
 
   for (const tab of project.tabs) {
+    const startIndex = ordered.length;
     for (const block of tab.blocks) {
       if (block.type === "hero") {
         appendImage(block.image);
@@ -459,11 +469,20 @@ function getProjectGalleryImages(project: StickyProject): GalleryImage[] {
         }
       }
     }
+    const endIndex = ordered.length - 1;
+    if (endIndex >= startIndex) {
+      tabs.push({
+        id: tab.id,
+        label: tab.label,
+        startIndex,
+        endIndex,
+      });
+    }
   }
 
   appendImage(project.cover);
 
-  return ordered;
+  return { images: ordered, tabs };
 }
 
 export function StickyProjectsSection() {
@@ -471,8 +490,9 @@ export function StickyProjectsSection() {
   const { stickyProjects } = getLocalizedCvData(locale);
   const copy = getUiCopy(locale).projects;
 
+  const [activeTabByProject, setActiveTabByProject] = useState<Record<string, string>>({});
   const [lightboxState, setLightboxState] = useState<{
-    images: GalleryImage[];
+    projectId: string;
     index: number;
   } | null>(null);
   const [openProjectIds, setOpenProjectIds] = useState<string[]>([]);
@@ -496,15 +516,40 @@ export function StickyProjectsSection() {
     });
   };
 
+  const syncProjectTab = (projectId: string, tabs: LightboxSectionTab[], imageIndex: number) => {
+    const matchedTab = tabs.find(
+      (tab) => imageIndex >= tab.startIndex && imageIndex <= tab.endIndex
+    );
+    if (!matchedTab) return;
+    setActiveTabByProject((prev) =>
+      prev[projectId] === matchedTab.id ? prev : { ...prev, [projectId]: matchedTab.id }
+    );
+  };
+
   const handleOpenLightbox = (project: StickyProject, clickedImage: GalleryImage) => {
-    const images = getProjectGalleryImages(project);
+    const { images, tabs } = getProjectGalleryData(project);
     const matchedIndex = images.findIndex(
       (img) => img.id === clickedImage.id || img.src === clickedImage.src
     );
+    const nextIndex = matchedIndex >= 0 ? matchedIndex : 0;
+    syncProjectTab(project.id, tabs, nextIndex);
     setLightboxState({
-      images,
-      index: matchedIndex >= 0 ? matchedIndex : 0,
+      projectId: project.id,
+      index: nextIndex,
     });
+  };
+
+  const activeLightboxProject = lightboxState
+    ? (stickyProjects.find((p) => p.id === lightboxState.projectId) ?? null)
+    : null;
+  const activeLightboxGallery = activeLightboxProject
+    ? getProjectGalleryData(activeLightboxProject)
+    : null;
+
+  const handleLightboxNavigate = (nextIndex: number) => {
+    if (!activeLightboxProject || !activeLightboxGallery) return;
+    syncProjectTab(activeLightboxProject.id, activeLightboxGallery.tabs, nextIndex);
+    setLightboxState((prev) => (prev ? { ...prev, index: nextIndex } : null));
   };
 
   return (
@@ -530,6 +575,10 @@ export function StickyProjectsSection() {
             project={project}
             index={index}
             total={stickyProjects.length}
+            activeTabId={activeTabByProject[project.id] ?? project.tabs[0]?.id ?? ""}
+            onSelectTab={(tabId) =>
+              setActiveTabByProject((prev) => ({ ...prev, [project.id]: tabId }))
+            }
             onOpenLightbox={(image) => handleOpenLightbox(project, image)}
             onOpenChange={handleProjectOpenChange}
           />
@@ -537,11 +586,13 @@ export function StickyProjectsSection() {
       </div>
 
       <Lightbox
-        images={lightboxState?.images}
+        images={activeLightboxGallery?.images}
         currentIndex={lightboxState?.index}
-        onNavigate={(nextIndex) =>
-          setLightboxState((prev) => (prev ? { ...prev, index: nextIndex } : null))
+        tabs={activeLightboxGallery?.tabs}
+        tabsAriaLabel={
+          activeLightboxProject ? copy.tabsAria(activeLightboxProject.title) : undefined
         }
+        onNavigate={handleLightboxNavigate}
         onClose={() => setLightboxState(null)}
       />
     </section>
