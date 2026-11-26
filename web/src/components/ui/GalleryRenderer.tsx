@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { Maximize2 } from "lucide-react";
+import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import type { GalleryBlock, GalleryImage } from "@/data/cv-data";
+import { getUiCopy } from "@/data/ui-copy";
 
 interface ImageFrameButtonProps {
   image: GalleryImage;
@@ -19,8 +21,6 @@ function ImageFrameButton({
   showCaption = true,
   sizes,
 }: ImageFrameButtonProps) {
-  const isMobileVariant = variant === "mobile-showcase" || variant === "mobile-strip";
-
   const frameClassName =
     variant === "desktop"
       ? "relative aspect-[16/10] w-full overflow-hidden rounded-[2px] border border-hairline bg-paper"
@@ -28,13 +28,16 @@ function ImageFrameButton({
         ? "relative mx-auto aspect-[393/852] w-full max-w-[220px] overflow-hidden rounded-[12px] border border-hairline bg-paper"
         : "relative aspect-[393/852] w-full overflow-hidden rounded-[12px] border border-hairline bg-paper";
 
+  const { locale } = useAppPreferences();
+  const copy = getUiCopy(locale).gallery;
+
   return (
     <div className="flex flex-col">
       <button
         type="button"
         onClick={() => onSelect(image)}
         className={`group block w-full cursor-zoom-in text-left ${frameClassName}`}
-        aria-label={`Ampliar ${image.title}`}
+        aria-label={copy.expandAria(image.title)}
       >
         <Image
           src={image.src}
@@ -43,12 +46,12 @@ function ImageFrameButton({
           sizes={sizes}
           className="object-cover object-top transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015]"
         />
-        {(image.isLong || isMobileVariant) && (
-          <span className="pointer-events-none absolute right-2.5 bottom-2.5 z-10 inline-flex items-center gap-1 rounded-[2px] border border-hairline bg-paper/90 px-2.5 py-1 font-mono text-[11px] tracking-wider text-ink backdrop-blur-sm transition-colors group-hover:bg-paper">
-            {image.isLong ? "Ver pantalla completa" : "Ampliar"}
-            <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
-          </span>
-        )}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-2.5 bottom-2.5 z-10 inline-flex h-7 w-7 items-center justify-center rounded-[2px] border border-hairline bg-paper/90 text-ink opacity-75 shadow-sm backdrop-blur-sm transition-all duration-200 [@media(hover:hover)]:translate-y-0.5 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:bg-paper [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:translate-y-0 [@media(hover:hover)]:group-focus-visible:opacity-100"
+        >
+          <Maximize2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+        </span>
       </button>
       {showCaption && (
         <p className="mt-2 font-mono text-xs leading-relaxed text-muted">

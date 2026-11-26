@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import type { GalleryImage } from "@/data/cv-data";
+import { getUiCopy } from "@/data/ui-copy";
 import { EASE_EDITORIAL } from "@/lib/motion";
 
 interface LightboxProps {
@@ -23,8 +25,12 @@ export function Lightbox({
   onClose,
 }: LightboxProps) {
   const { stop, start } = useSmoothScroll();
+  const { locale } = useAppPreferences();
+  const copy = getUiCopy(locale).lightbox;
   const prefersReducedMotion = useReducedMotion();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const [navDirection, setNavDirection] = useState<1 | -1 | 0>(0);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
@@ -35,7 +41,10 @@ export function Lightbox({
   const isOpen = Boolean(activeImage);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setNavDirection(0);
+      return;
+    }
 
     stop();
     const previousBodyOverflow = document.body.style.overflow;
@@ -66,12 +75,47 @@ export function Lightbox({
 
   const handlePrev = () => {
     if (!canNavigate || currentIndex === undefined || !onNavigate) return;
+    setNavDirection(-1);
     onNavigate((currentIndex - 1 + totalImages) % totalImages);
   };
 
   const handleNext = () => {
     if (!canNavigate || currentIndex === undefined || !onNavigate) return;
+    setNavDirection(1);
     onNavigate((currentIndex + 1) % totalImages);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!canNavigate || event.touches.length !== 1) {
+      touchStartRef.current = null;
+      return;
+    }
+    const touch = event.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const startTouch = touchStartRef.current;
+    touchStartRef.current = null;
+
+    if (!canNavigate || !startTouch || event.changedTouches.length !== 1) return;
+
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - startTouch.x;
+    const dy = touch.clientY - startTouch.y;
+    const elapsed = Date.now() - startTouch.time;
+
+    if (elapsed < 650 && Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+      if (dx < 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
   };
 
   const formatCounter = (value: number) => String(value).padStart(2, "0");
@@ -88,7 +132,7 @@ export function Lightbox({
           exit={{ opacity: 0 }}
           transition={{ duration: prefersReducedMotion ? 0.1 : 0.2 }}
           onClick={onClose}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/80 p-4 backdrop-blur-sm sm:p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-scrim p-0 backdrop-blur-sm sm:p-6"
         >
           <motion.div
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 8 }}
@@ -96,75 +140,84 @@ export function Lightbox({
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 8 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: EASE_EDITORIAL }}
             onClick={(e) => e.stopPropagation()}
-            className="relative flex h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[4px] border border-hairline bg-paper sm:h-[90vh]"
+            className="relative flex h-[100dvh] w-full flex-col overflow-hidden rounded-none border-0 bg-paper sm:h-[90vh] sm:max-w-5xl sm:rounded-[4px] sm:border sm:border-hairline"
           >
-            <div className="z-10 flex shrink-0 items-start justify-between gap-3 border-b border-hairline bg-paper/95 px-4 py-3.5 backdrop-blur-md sm:gap-4 sm:px-5">
-              <div className="min-w-0 flex-1">
-                <span className="block truncate font-mono text-[11px] uppercase tracking-wider text-muted">
+            <div className="z-10 shrink-0 border-b border-hairline bg-paper/95 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 backdrop-blur-md sm:px-5 sm:py-3.5">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 sm:items-start sm:gap-x-4 sm:gap-y-0">
+                <span className="col-start-1 row-start-1 truncate font-mono text-[10px] uppercase tracking-wider text-muted sm:text-[11px]">
                   {activeImage.productLabel}
                 </span>
-                <h4 className="truncate font-serif text-lg leading-snug font-normal text-ink sm:text-xl">
-                  {activeImage.title}
-                </h4>
-                {activeImage.caption && (
-                  <p className="mt-1 max-w-3xl font-sans text-xs leading-relaxed text-body sm:text-[13px]">
-                    {activeImage.caption}
-                  </p>
-                )}
-              </div>
 
-              <div className="flex shrink-0 items-center gap-1.5 pt-0.5 sm:gap-2">
-                {canNavigate && currentIndex !== undefined && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      aria-label="Captura anterior"
-                      title="Captura anterior"
-                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
-                    >
-                      <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
-                    </button>
-                    <span
-                      aria-live="polite"
-                      className="px-1 font-mono text-[11px] tracking-wider text-muted tabular-nums"
-                    >
-                      {formatCounter(currentIndex + 1)} / {formatCounter(totalImages)}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      aria-label="Siguiente captura"
-                      title="Siguiente captura"
-                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
-                    >
-                      <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
-                    </button>
-                    <span aria-hidden="true" className="mx-0.5 h-5 w-px bg-hairline" />
-                  </>
-                )}
+                <div className="col-start-2 row-start-1 flex shrink-0 items-center gap-1.5 sm:row-span-2 sm:gap-2 sm:pt-0.5">
+                  {canNavigate && currentIndex !== undefined && (
+                    <div className="hidden items-center gap-1.5 sm:flex sm:gap-2">
+                      <button
+                        type="button"
+                        onClick={handlePrev}
+                        aria-label={copy.prevAria}
+                        title={copy.prevAria}
+                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
+                      >
+                        <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
+                      </button>
+                      <span
+                        aria-live="polite"
+                        className="px-1 font-mono text-[11px] tracking-wider text-muted tabular-nums"
+                      >
+                        {formatCounter(currentIndex + 1)} / {formatCounter(totalImages)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleNext}
+                        aria-label={copy.nextAria}
+                        title={copy.nextAria}
+                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
+                      >
+                        <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
+                      </button>
+                      <span aria-hidden="true" className="mx-0.5 h-5 w-px bg-hairline" />
+                    </div>
+                  )}
 
-                <button
-                  type="button"
-                  onClick={onClose}
-                  aria-label="Cerrar vista ampliada"
-                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
-                >
-                  <X className="h-4 w-4" strokeWidth={1.5} />
-                </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label={copy.closeAria}
+                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
+                  >
+                    <X className="h-4 w-4" strokeWidth={1.5} />
+                  </button>
+                </div>
+
+                <div className="col-span-2 row-start-2 min-w-0 sm:col-span-1">
+                  <h4 className="font-serif text-[19px] leading-snug font-normal text-ink sm:truncate sm:text-xl">
+                    {activeImage.title}
+                  </h4>
+                  {activeImage.caption && (
+                    <p className="mt-0.5 max-w-3xl font-sans text-[13px] leading-[1.4] text-body sm:mt-1 sm:leading-relaxed">
+                      {activeImage.caption}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
             <div
               ref={scrollContainerRef}
               data-lenis-prevent
-              className="flex min-h-0 flex-1 touch-pan-y flex-col overflow-y-auto overscroll-contain bg-card-stage/60 p-4 sm:p-6"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="flex min-h-0 flex-1 touch-pan-y flex-col overflow-y-auto overscroll-contain bg-card-stage/60 p-5 sm:p-6"
             >
               <motion.div
                 key={activeImage.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: prefersReducedMotion ? 0.05 : 0.16, ease: EASE_EDITORIAL }}
+                initial={
+                  prefersReducedMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, x: navDirection * 14 }
+                }
+                animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0.05 : 0.18, ease: EASE_EDITORIAL }}
                 className="my-auto flex w-full flex-col items-center"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -181,6 +234,37 @@ export function Lightbox({
                 />
               </motion.div>
             </div>
+
+            {canNavigate && currentIndex !== undefined && (
+              <div className="z-10 flex shrink-0 items-center justify-between gap-3 border-t border-hairline bg-paper/95 px-4 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:hidden">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  aria-label={copy.prevAria}
+                  className="inline-flex h-10 items-center gap-1.5 rounded-[2px] border border-hairline bg-paper px-3 font-mono text-[11px] tracking-wider text-ink transition-colors active:border-ink active:bg-ink active:text-paper"
+                >
+                  <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
+                  <span>{copy.prevLabel}</span>
+                </button>
+
+                <span
+                  aria-live="polite"
+                  className="font-mono text-xs tracking-wider text-muted tabular-nums"
+                >
+                  {formatCounter(currentIndex + 1)} / {formatCounter(totalImages)}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  aria-label={copy.nextAria}
+                  className="inline-flex h-10 items-center gap-1.5 rounded-[2px] border border-hairline bg-paper px-3 font-mono text-[11px] tracking-wider text-ink transition-colors active:border-ink active:bg-ink active:text-paper"
+                >
+                  <span>{copy.nextLabel}</span>
+                  <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
+                </button>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

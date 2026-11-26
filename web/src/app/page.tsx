@@ -5,6 +5,7 @@ import { HeaderNavbar } from "@/components/sections/HeaderNavbar";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { PortfolioSection } from "@/components/sections/PortfolioSection";
 import { StickyProjectsSection } from "@/components/sections/StickyProjectsSection";
+import { MobileScrollTopButton } from "@/components/ui/MobileScrollTopButton";
 
 export default function HomePage() {
   return (
@@ -18,6 +19,7 @@ export default function HomePage() {
         <EducationStackSection />
       </main>
       <FooterSection />
+      <MobileScrollTopButton />
     </div>
   );
 }

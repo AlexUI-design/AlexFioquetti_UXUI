@@ -3,16 +3,28 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef } from "react";
 import Lenis from "lenis";
 
+interface SmoothScrollToOptions {
+  offset?: number;
+  immediate?: boolean;
+  duration?: number;
+  force?: boolean;
+  lock?: boolean;
+  easing?: (t: number) => number;
+  onComplete?: () => void;
+}
+
 interface SmoothScrollContextValue {
   stop: () => void;
   start: () => void;
   resize: () => void;
+  scrollTo: (target: number | string | Element, options?: SmoothScrollToOptions) => void;
 }
 
 const SmoothScrollContext = createContext<SmoothScrollContextValue>({
   stop: () => {},
   start: () => {},
   resize: () => {},
+  scrollTo: () => {},
 });
 
 export function useSmoothScroll() {
@@ -66,8 +78,43 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
     lenisRef.current?.resize();
   }, []);
 
+  const scrollTo = useCallback(
+    (target: number | string | Element, options?: SmoothScrollToOptions) => {
+      const lenis = lenisRef.current;
+      if (lenis) {
+        lenis.scrollTo(target, {
+          offset: options?.offset ?? 0,
+          immediate: options?.immediate ?? false,
+          duration: options?.duration,
+          force: options?.force ?? true,
+          lock: options?.lock ?? false,
+          easing: options?.easing,
+          onComplete: options?.onComplete,
+        });
+        return;
+      }
+
+      let top = 0;
+      if (typeof target === "number") {
+        top = target + (options?.offset ?? 0);
+      } else {
+        const el = typeof target === "string" ? document.querySelector(target) : target;
+        if (el) {
+          top = el.getBoundingClientRect().top + window.scrollY + (options?.offset ?? 0);
+        }
+      }
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: options?.immediate ? "auto" : "smooth",
+      });
+      options?.onComplete?.();
+    },
+    []
+  );
+
   return (
-    <SmoothScrollContext.Provider value={{ stop, start, resize }}>
+    <SmoothScrollContext.Provider value={{ stop, start, resize, scrollTo }}>
       {children}
     </SmoothScrollContext.Provider>
   );
