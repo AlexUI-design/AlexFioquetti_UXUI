@@ -2,7 +2,6 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
-import { SplitText } from "@/components/ui/SplitText";
 import { getLocalizedCvData } from "@/data/cv-data-en";
 import { getUiCopy } from "@/data/ui-copy";
 
@@ -22,17 +21,11 @@ export function FooterSection() {
   return (
     <footer
       id="contacto"
-      className="mx-auto max-w-[1520px] border-t border-hairline px-4 pt-12 pb-8 sm:px-8 sm:pt-28 sm:pb-12"
+      className="mx-auto max-w-[1520px] border-t border-hairline px-4 pt-12 pb-8 sm:px-8 sm:pt-24 sm:pb-12"
     >
       <span className="font-mono text-xs tracking-wider text-muted">{copy.overline}</span>
 
-      <SplitText
-        lines={[copy.headline]}
-        as="h2"
-        className="mt-2.5 font-serif text-[clamp(30px,7vw,84px)] leading-[1.04] font-normal tracking-[-0.025em] text-ink sm:mt-4"
-      />
-
-      <div className="mt-6 sm:mt-10">
+      <div className="mt-4 sm:mt-6">
         <a
           href={`mailto:${personalInfo.email}`}
           className="group relative inline-flex items-center gap-2 border-b border-hairline pb-2 font-serif text-[clamp(20px,3.2vw,40px)] font-normal break-all text-ink after:absolute after:right-0 after:-bottom-[1px] after:left-0 after:h-[1.5px] after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-300 hover:after:scale-x-100 sm:break-normal"

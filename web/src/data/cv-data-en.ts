@@ -23,9 +23,8 @@ const personalInfoEn = {
 const heroDataEn = {
   overline: "00 / DESIGN APPROACH & PRODUCT",
   headlineLines: [
-    "Designing digital",
-    "products with industrial",
-    "and systemic rigor.",
+    "UX/UI & Digital",
+    "Product Design.",
   ],
   bio: "UX/UI Designer holding a degree in Industrial Design from UNCuyo. I lead end-to-end product design within agile squads—from user research and direct client discovery to scalable design system architecture.",
   specialtyChips: [
@@ -676,7 +675,7 @@ const educationDataEn: EducationEntry[] = [
     institution: "Coderhouse",
     degree: "Comprehensive UX/UI Specialization Track",
     period: "2024 — 2025",
-    highlight: "Grades: 8.5 to 10 (Outstanding)",
+    highlight: "Grades: 8.5 to 10",
     details: [
       "Advanced UX/UI Design — Score: 10 / 10 (Design Systems, Variables, Developer Handoff)",
       "UX Writing Course — Score: 9.0 / 10 (Microcopy, Tone & Voice, Conversational Design)",

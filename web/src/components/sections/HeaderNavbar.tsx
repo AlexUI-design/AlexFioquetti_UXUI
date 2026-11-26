@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, FileDown, Menu, Moon, Sun, X } from "lucide-react";
+import { ArrowUpRight, FileDown, Loader2, Menu, Moon, Sun, X } from "lucide-react";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import { getLocalizedCvData } from "@/data/cv-data-en";
@@ -13,7 +13,7 @@ export function HeaderNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHiddenOnMobile, setIsHiddenOnMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cvNotice, setCvNotice] = useState(false);
+  const [cvStatus, setCvStatus] = useState<"idle" | "loading" | "error">("idle");
   const lastScrollYRef = useRef(0);
 
   const prefersReducedMotion = useReducedMotion();
@@ -90,10 +90,66 @@ export function HeaderNavbar() {
   }, [isMenuOpen, stop, start]);
 
   useEffect(() => {
-    if (!cvNotice) return;
-    const timeout = setTimeout(() => setCvNotice(false), 2600);
+    if (cvStatus !== "error") return;
+    const timeout = setTimeout(() => setCvStatus("idle"), 2800);
     return () => clearTimeout(timeout);
-  }, [cvNotice]);
+  }, [cvStatus]);
+
+  const handleDownloadCv = async (closeMobileMenu = false) => {
+    if (cvStatus === "loading") return;
+
+    setCvStatus("loading");
+    try {
+      const { generateCvPdf } = await import("@/lib/generate-cv-pdf");
+      const pdfBytes = await generateCvPdf(locale);
+
+      // Verify valid %PDF magic header before initiating browser download
+      if (
+        pdfBytes.byteLength < 100 ||
+        pdfBytes[0] !== 0x25 ||
+        pdfBytes[1] !== 0x50 ||
+        pdfBytes[2] !== 0x44 ||
+        pdfBytes[3] !== 0x46
+      ) {
+        throw new Error("Invalid PDF binary output");
+      }
+
+      const safeBytes = new Uint8Array(pdfBytes.byteLength);
+      safeBytes.set(pdfBytes);
+
+      const blob = new Blob([safeBytes.buffer], { type: "application/pdf" });
+      const objectUrl = URL.createObjectURL(blob);
+      const filename =
+        locale === "en"
+          ? "Alex-Fioquetti-CV-EN.pdf"
+          : "Alex-Fioquetti-CV-ES.pdf";
+
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = filename;
+      link.rel = "noopener";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      // Keep blob URL alive 60s so Save As dialogs & mobile download managers finish cleanly
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+      setCvStatus("idle");
+      if (closeMobileMenu) {
+        setIsMenuOpen(false);
+      }
+    } catch {
+      setCvStatus("error");
+    }
+  };
+
+  const cvButtonLabel =
+    cvStatus === "loading"
+      ? copy.downloadingCv
+      : cvStatus === "error"
+        ? copy.cvError
+        : copy.downloadCv;
 
   const handleMobileNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     event.preventDefault();
@@ -186,26 +242,21 @@ export function HeaderNavbar() {
               )}
             </button>
 
-            {personalInfo.cvPdfUrl ? (
-              <a
-                href={personalInfo.cvPdfUrl}
-                download
-                className="inline-flex h-8 items-center gap-1.5 rounded-[2px] border border-hairline px-3 font-mono text-[11px] tracking-wider text-ink transition-all hover:border-ink hover:bg-ink hover:text-paper"
-              >
+            <button
+              type="button"
+              onClick={() => handleDownloadCv(false)}
+              disabled={cvStatus === "loading"}
+              aria-busy={cvStatus === "loading"}
+              aria-live="polite"
+              className="inline-flex h-8 items-center gap-1.5 rounded-[2px] border border-hairline px-3 font-mono text-[11px] tracking-wider text-ink transition-all hover:border-ink hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-70"
+            >
+              {cvStatus === "loading" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={1.6} />
+              ) : (
                 <FileDown className="h-3.5 w-3.5" strokeWidth={1.5} />
-                <span>{copy.downloadCv}</span>
-              </a>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setCvNotice(true)}
-                aria-live="polite"
-                className="inline-flex h-8 items-center gap-1.5 rounded-[2px] border border-hairline px-3 font-mono text-[11px] tracking-wider text-ink transition-all hover:border-ink hover:bg-ink hover:text-paper"
-              >
-                <FileDown className="h-3.5 w-3.5" strokeWidth={1.5} />
-                <span>{cvNotice ? copy.cvComingSoon : copy.downloadCv}</span>
-              </button>
-            )}
+              )}
+              <span>{cvButtonLabel}</span>
+            </button>
 
             <a
               href={`mailto:${personalInfo.email}`}
@@ -322,27 +373,21 @@ export function HeaderNavbar() {
               </div>
 
               <div className="mt-4 flex flex-col gap-2.5 border-t border-hairline pt-4">
-                {personalInfo.cvPdfUrl ? (
-                  <a
-                    href={personalInfo.cvPdfUrl}
-                    download
-                    onClick={() => setIsMenuOpen(false)}
-                    className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[2px] border border-hairline bg-paper px-4 font-mono text-xs tracking-wider text-ink transition-colors hover:border-ink"
-                  >
+                <button
+                  type="button"
+                  onClick={() => handleDownloadCv(true)}
+                  disabled={cvStatus === "loading"}
+                  aria-busy={cvStatus === "loading"}
+                  aria-live="polite"
+                  className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[2px] border border-hairline bg-paper px-4 font-mono text-xs tracking-wider text-ink transition-colors hover:border-ink disabled:cursor-wait disabled:opacity-70"
+                >
+                  {cvStatus === "loading" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={1.6} />
+                  ) : (
                     <FileDown className="h-3.5 w-3.5" strokeWidth={1.5} />
-                    <span>{copy.downloadCv}</span>
-                  </a>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setCvNotice(true)}
-                    aria-live="polite"
-                    className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[2px] border border-hairline bg-paper px-4 font-mono text-xs tracking-wider text-ink transition-colors hover:border-ink"
-                  >
-                    <FileDown className="h-3.5 w-3.5" strokeWidth={1.5} />
-                    <span>{cvNotice ? copy.cvComingSoon : copy.downloadCv}</span>
-                  </button>
-                )}
+                  )}
+                  <span>{cvButtonLabel}</span>
+                </button>
 
                 <a
                   href={`mailto:${personalInfo.email}`}

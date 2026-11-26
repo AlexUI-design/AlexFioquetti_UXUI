@@ -100,16 +100,15 @@ export const personalInfo = {
   whatsappUrl: "https://wa.me/5492612535082",
   linkedinUrl: "https://www.linkedin.com/in/alex-fioquetti-ux-ui/",
   linktreeUrl: "https://linktr.ee/Alekei",
-  behanceUrl: "https://www.behance.net/",
+  behanceUrl: "https://www.behance.net/AlexFioquetti",
   cvPdfUrl: null as string | null,
 };
 
 export const heroData = {
   overline: "00 / ENFOQUE PROYECTUAL & PRODUCTO",
   headlineLines: [
-    "Diseño de productos",
-    "digitales con rigor",
-    "industrial y sistémico.",
+    "Diseño UX/UI y",
+    "Producto Digital.",
   ],
   bio: "Diseñador UX/UI graduado en Diseño Industrial por la UNCuyo. Lidero el diseño de producto de punta a punta en squads ágiles: desde la investigación con usuarios y discovery directo con clientes hasta la arquitectura de sistemas de diseño escalables.",
   specialtyChips: [
@@ -760,7 +759,7 @@ export const educationData: EducationEntry[] = [
     institution: "Coderhouse",
     degree: "Ciclo Integral de Especialización UX/UI",
     period: "2024 — 2025",
-    highlight: "Calificaciones: 8.5 a 10 (Sobresaliente)",
+    highlight: "Calificaciones: 8.5 a 10",
     details: [
       "Diseñador UX/UI Avanzado — Nota: 10 / 10 (Design Systems, Variables, Developer Handoff)",
       "Curso de UX Writing — Nota: 9.0 / 10 (Microcopy, Tone & Voice, Diseño Conversacional)",

@@ -23,17 +23,18 @@ export function HeroSection() {
   const watermarkY = useTransform(scrollY, [0, 600], [0, 80]);
 
   return (
-    <section className="relative mx-auto flex min-h-[78svh] max-w-[1520px] flex-col justify-between overflow-x-clip px-4 py-8 sm:min-h-screen sm:px-8 sm:py-20">
+    <section className="relative mx-auto flex min-h-[62svh] max-w-[1520px] flex-col justify-between overflow-x-clip px-4 pt-7 pb-6 sm:min-h-[min(78svh,680px)] sm:px-8 sm:pt-12 sm:pb-8 lg:px-10">
       <motion.div
         aria-hidden="true"
         style={{ y: prefersReducedMotion ? 0 : watermarkY }}
-        className="pointer-events-none absolute top-10 right-4 select-none font-serif text-[clamp(160px,28vw,420px)] leading-none font-normal tracking-[-0.05em] text-ghost/60 will-change-transform sm:top-6 sm:right-8"
+        className="pointer-events-none absolute top-8 right-4 select-none font-serif text-[clamp(140px,24vw,350px)] leading-none font-normal tracking-[-0.05em] text-ghost/55 will-change-transform sm:top-5 sm:right-8"
       >
         AF
       </motion.div>
 
-      <div className="relative z-10 pt-2 sm:pt-8">
-        <div className="mb-4 sm:mb-6">
+      {/* Top zone: Overline, simplified headline, and compact bio directly underneath */}
+      <div className="relative z-10 pt-1 sm:pt-3">
+        <div className="mb-3 sm:mb-4">
           <span className="font-mono text-xs tracking-wider text-muted">
             {heroData.overline}
           </span>
@@ -42,28 +43,29 @@ export function HeroSection() {
         <SplitText
           lines={heroData.headlineLines}
           as="h1"
-          className="font-serif text-[clamp(38px,9vw,92px)] leading-[1.02] font-normal tracking-[-0.03em] text-ink"
+          className="font-serif text-[clamp(36px,7vw,82px)] leading-[1.03] font-normal tracking-[-0.03em] text-ink"
         />
-      </div>
 
-      <div className="relative z-10 mt-8 grid grid-cols-1 items-end gap-6 border-t border-hairline pt-6 sm:mt-14 sm:gap-10 sm:pt-8 lg:mt-20 lg:grid-cols-12 lg:gap-12">
-        <p className="max-w-xl font-sans text-[15px] leading-[1.5] text-body sm:text-[17px] sm:leading-relaxed lg:col-span-7">
+        <p className="mt-4 max-w-xl font-sans text-[14px] leading-[1.48] text-body sm:mt-5 sm:text-[15.5px] sm:leading-[1.5]">
           {heroData.bio}
         </p>
+      </div>
 
+      {/* Bottom zone: 4 featured projects directly above the hero closing hairline */}
+      <div className="relative z-10 mt-10 border-b border-hairline pb-5 sm:mt-14 sm:pb-7">
         <nav
           aria-label={copy.quickNavAria}
-          className="space-y-2 font-mono text-xs lg:col-span-5"
+          className="grid grid-cols-1 gap-x-10 gap-y-2.5 font-mono text-xs md:grid-cols-2 lg:gap-x-16"
         >
           {quickNavProjects.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="group flex items-center justify-between border-b border-hairline/80 pb-2 text-muted transition-colors hover:border-ink hover:text-ink"
+              className="group flex items-center justify-between border-b border-hairline/70 pb-2 text-muted transition-colors hover:border-ink hover:text-ink"
             >
               <span className="tracking-wider">{item.label}</span>
               <ArrowDownRight
-                className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-0.5"
+                className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-0.5"
                 strokeWidth={1.5}
               />
             </a>
