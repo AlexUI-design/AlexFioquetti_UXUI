@@ -238,7 +238,8 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
   // =========================================================================
   pdf.drawText(personalInfo.fullName, MARGIN_X, y, "serif", 25, COLOR_INK);
 
-  const locText = sanitizeWinAnsi(personalInfo.locationLabel.toUpperCase());
+  const pdfLocation = personalInfo.locationLabel.replace(/\s*\([^)]*UTC[^)]*\)/gi, "").trim();
+  const locText = sanitizeWinAnsi(pdfLocation.toUpperCase());
   const locWidth = measureTextWidth(locText, "sans", 7.6);
   pdf.drawText(locText, A4_WIDTH - MARGIN_X - locWidth, y + 11, "sans", 7.6, COLOR_MUTED);
 

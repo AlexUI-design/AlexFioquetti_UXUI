@@ -322,7 +322,7 @@ export const stickyProjects: StickyProject[] = [
         id: "bo-del-bot",
         label: "BO del Bot",
         description:
-          "Consola backoffice para administrar distribuidores, asesores y administradores habilitados dentro del asistente conversacional del ecosistema.",
+          "Consola backoffice para administrar distribuidores, asesores y administradores del asistente conversacional, junto al módulo de Campañas WhatsApp para monitorear métricas, configurar envíos con validaciones condicionales y gestionar destinatarios aprobados con estimación transparente de costos.",
         blocks: [
           {
             type: "hero",
@@ -360,6 +360,107 @@ export const stickyProjects: StickyProject[] = [
                 width: 2600,
                 height: 1612,
                 productLabel: "Advanta · BO del Bot",
+              },
+            ],
+          },
+          {
+            type: "hero",
+            image: {
+              id: "p01-bobot-campanas-listado",
+              src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campanas-listado.png",
+              alt: "Panel general de Campañas WhatsApp con KPIs de saldo, envíos, campañas activas y tabla de estados",
+              title: "Campañas WhatsApp — Panel General y Métricas",
+              caption:
+                "Vista principal con saldo disponible, envíos realizados, tasa de respuestas \"Sí\", lista global de bajas, filtros y tabla con 7 estados de ciclo de vida.",
+              width: 2600,
+              height: 1572,
+              productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
+            },
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-campana-crear-base",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-crear-base.png",
+                alt: "Formulario de creación de nueva campaña de WhatsApp con configuración de respuestas del bot",
+                title: "Creación de Campaña (Flujo Interactivo)",
+                caption:
+                  "Formulario en 4 bloques para definir datos básicos, flyer opcional, mensaje de hasta 1024 caracteres y respuestas automáticas para botones Sí/No.",
+                width: 2560,
+                height: 2774,
+                isLong: true,
+                productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
+              },
+              {
+                id: "p01-bobot-campana-error-flyer",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-error-flyer.png",
+                alt: "Estado de error de validación al cargar un flyer inválido y campo de email de derivación",
+                title: "Validación de Archivo y Derivación",
+                caption:
+                  "Alerta preventiva ante archivos fuera de formato o peso límite (JPG/PNG hasta 5 MB) y configuración opcional de email sin cobertura comercial.",
+                width: 2560,
+                height: 2958,
+                isLong: true,
+                productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
+              },
+            ],
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-campana-informativa",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-informativa.png",
+                alt: "Variante de campaña informativa con flyer cargado y bloque de bot deshabilitado",
+                title: "Variante Informativa y Flyer Cargado",
+                caption:
+                  "Previsualización de la pieza adjunta con acciones de reemplazo y lógica condicional que deshabilita respuestas automáticas en campañas informativas.",
+                width: 2560,
+                height: 2922,
+                isLong: true,
+                productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
+              },
+              {
+                id: "p01-bobot-campana-modal-borrador",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-modal-borrador.png",
+                alt: "Modal de confirmación para guardar una campaña de WhatsApp como borrador",
+                title: "Resguardo de Progreso en Borrador",
+                caption:
+                  "Modal de confirmación que asegura continuidad para retomar la edición, cargar destinatarios o enviar a aprobación más adelante.",
+                width: 2560,
+                height: 2922,
+                isLong: true,
+                productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
+              },
+            ],
+          },
+          {
+            type: "pair",
+            images: [
+              {
+                id: "p01-bobot-campana-carga-destinatarios",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-carga-destinatarios.png",
+                alt: "Paso 1 de carga de destinatarios en una campaña aprobada con plantilla Excel y dropzone CSV",
+                title: "Campaña Aprobada — Carga de Destinatarios",
+                caption:
+                  "Paso 1 tras la aprobación comercial con plantilla descargable .xlsx, carga de archivos hasta 10 MB y aviso de normalización de prefijos y bajas.",
+                width: 2560,
+                height: 2276,
+                isLong: true,
+                productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
+              },
+              {
+                id: "p01-bobot-campana-revision-costos",
+                src: "/images/proyecto-01-advanta/bo-del-bot/bo-bot-campana-revision-costos.png",
+                alt: "Paso 2 con resumen de validación de destinatarios, política de envío escalonado y estimación de costos Meta y Twilio",
+                title: "Validación, Costos y Confirmación",
+                caption:
+                  "Paso 2 con métricas de válidos, bajas y errores exportables en CSV, política de envío responsable en lotes y estimación transparente Meta + Twilio.",
+                width: 2560,
+                height: 2642,
+                isLong: true,
+                productLabel: "Advanta · BO del Bot · Campañas WhatsApp",
               },
             ],
           },
