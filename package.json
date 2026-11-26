@@ -10,8 +10,5 @@
     "build": "npm run build --workspace=alex-fioquetti-cv",
     "start": "npm run start --workspace=alex-fioquetti-cv",
     "lint": "npm run lint --workspace=alex-fioquetti-cv"
-  },
-  "dependencies": {
-    "pdf-lib": "^1.17.1"
   }
 }
