@@ -1,25 +1,24 @@
-import {
-  PDFDocument,
-  PDFName,
-  PDFString,
-  StandardFonts,
-  rgb,
-  type PDFFont,
-  type PDFPage,
-} from "pdf-lib";
 import type { Locale } from "@/components/providers/AppPreferencesProvider";
 import { getLocalizedCvData } from "@/data/cv-data-en";
+import {
+  SinglePagePdfWriter,
+  measureTextWidth,
+  sanitizeWinAnsi,
+  type PdfColor,
+  type PdfFontKey,
+} from "@/lib/pdf-writer";
 
 const A4_WIDTH = 595.28;
 const A4_HEIGHT = 841.89;
 const MARGIN_X = 36;
 const CONTENT_WIDTH = A4_WIDTH - MARGIN_X * 2;
 
-const COLOR_INK = rgb(0.09, 0.09, 0.082); // #171715
-const COLOR_BODY = rgb(0.18, 0.184, 0.169); // #2E2F2B
-const COLOR_MUTED = rgb(0.337, 0.341, 0.314); // #565750
-const COLOR_HAIRLINE = rgb(0.82, 0.824, 0.79); // #D1D2C9
-const COLOR_ACCENT_RULE = rgb(0.16, 0.165, 0.15); // #292A26
+const COLOR_WHITE: PdfColor = { r: 1, g: 1, b: 1 };
+const COLOR_INK: PdfColor = { r: 0.09, g: 0.09, b: 0.082 }; // #171715
+const COLOR_BODY: PdfColor = { r: 0.18, g: 0.184, b: 0.169 }; // #2E2F2B
+const COLOR_MUTED: PdfColor = { r: 0.337, g: 0.341, b: 0.314 }; // #565750
+const COLOR_HAIRLINE: PdfColor = { r: 0.82, g: 0.824, b: 0.79 }; // #D1D2C9
+const COLOR_ACCENT_RULE: PdfColor = { r: 0.16, g: 0.165, b: 0.15 }; // #292A26
 
 interface PdfLabels {
   docTitle: string;
@@ -158,24 +157,9 @@ const PDF_LABELS: Record<Locale, PdfLabels> = {
   },
 };
 
-/**
- * Ensures all text is strictly WinAnsi-safe for pdf-lib StandardFonts
- * while preserving Spanish accents (á é í ó ú ü ñ), em/en dashes, bullets, and middots.
- */
-function sanitizeWinAnsi(input: string): string {
-  return input
-    .replace(/[\u2018\u2019]/g, "'")
-    .replace(/[\u201C\u201D]/g, '"')
-    .replace(/\u2026/g, "...")
-    .replace(/[\u2190-\u21FF]/g, "")
-    .replace(/[^\x20-\x7E\xA0-\xFF\u2013\u2014\u2022]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 function wrapText(
   text: string,
-  font: PDFFont,
+  font: PdfFontKey,
   fontSize: number,
   maxWidth: number,
   maxLines?: number
@@ -189,7 +173,7 @@ function wrapText(
 
   for (const word of words) {
     const candidate = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(candidate, fontSize) <= maxWidth) {
+    if (measureTextWidth(candidate, font, fontSize) <= maxWidth) {
       current = candidate;
     } else {
       if (current) {
@@ -208,7 +192,7 @@ function wrapText(
     let lastLine = clipped[maxLines - 1];
     while (
       lastLine.length > 4 &&
-      font.widthOfTextAtSize(`${lastLine}...`, fontSize) > maxWidth
+      measureTextWidth(`${lastLine}...`, font, fontSize) > maxWidth
     ) {
       lastLine = lastLine.slice(0, -1).trimEnd();
     }
@@ -220,84 +204,29 @@ function wrapText(
 }
 
 export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
-  const { personalInfo, heroData, stickyProjects, portfolioCases, experienceList, educationData, stackCategories } =
-    getLocalizedCvData(locale);
+  const {
+    personalInfo,
+    heroData,
+    stickyProjects,
+    portfolioCases,
+    experienceList,
+    educationData,
+    stackCategories,
+  } = getLocalizedCvData(locale);
   const labels = PDF_LABELS[locale];
 
-  const pdfDoc = await PDFDocument.create();
-  pdfDoc.setTitle(sanitizeWinAnsi(labels.docTitle));
-  pdfDoc.setAuthor(sanitizeWinAnsi(personalInfo.fullName));
-  pdfDoc.setSubject(sanitizeWinAnsi(labels.docSubject));
-  pdfDoc.setKeywords(labels.docKeywords.map(sanitizeWinAnsi));
-  pdfDoc.setCreator(sanitizeWinAnsi(`${personalInfo.shortName} Portfolio`));
-  pdfDoc.setProducer("pdf-lib");
-
-  const page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
+  const pdf = new SinglePagePdfWriter(A4_WIDTH, A4_HEIGHT);
 
   // Crisp pure white A4 background for printing & ATS readability
-  page.drawRectangle({
-    x: 0,
-    y: 0,
-    width: A4_WIDTH,
-    height: A4_HEIGHT,
-    color: rgb(1, 1, 1),
-  });
-
-  const fontSerif = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const fontSans = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const fontSansBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-  const linkAnnotations: ReturnType<typeof pdfDoc.context.register>[] = [];
-
-  const addUriLink = (
-    targetPage: PDFPage,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    url: string
-  ) => {
-    const annotRef = pdfDoc.context.register(
-      pdfDoc.context.obj({
-        Type: PDFName.of("Annot"),
-        Subtype: PDFName.of("Link"),
-        Rect: [x, y - 2, x + width, y + height + 1],
-        Border: [0, 0, 0],
-        A: {
-          Type: PDFName.of("Action"),
-          S: PDFName.of("URI"),
-          URI: PDFString.of(url),
-        },
-      })
-    );
-    linkAnnotations.push(annotRef);
-    // Subtle editorial hairline underline indicating clickability
-    targetPage.drawLine({
-      start: { x, y: y - 1.6 },
-      end: { x: x + width, y: y - 1.6 },
-      thickness: 0.45,
-      color: COLOR_HAIRLINE,
-    });
-  };
+  pdf.drawRect(0, 0, A4_WIDTH, A4_HEIGHT, COLOR_WHITE);
 
   const drawSectionHeader = (title: string, x: number, y: number, width: number): number => {
     const cleanTitle = sanitizeWinAnsi(title);
-    page.drawText(cleanTitle, {
-      x,
-      y,
-      size: 7.5,
-      font: fontSansBold,
-      color: COLOR_MUTED,
-    });
-    const textW = fontSansBold.widthOfTextAtSize(cleanTitle, 7.5);
+    pdf.drawText(cleanTitle, x, y, "sansBold", 7.5, COLOR_MUTED);
+    const textW = measureTextWidth(cleanTitle, "sansBold", 7.5);
     const lineStartX = x + textW + 8;
     if (lineStartX < x + width) {
-      page.drawLine({
-        start: { x: lineStartX, y: y + 2.5 },
-        end: { x: x + width, y: y + 2.5 },
-        thickness: 0.55,
-        color: COLOR_HAIRLINE,
-      });
+      pdf.drawLine(lineStartX, y + 2.5, x + width, y + 2.5, 0.55, COLOR_HAIRLINE);
     }
     return y - 14.5;
   };
@@ -307,43 +236,18 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
   // =========================================================================
   // HEADER BLOCK (Name, Role, Location, Clickable Contact Bar)
   // =========================================================================
-  const nameText = sanitizeWinAnsi(personalInfo.fullName);
-  page.drawText(nameText, {
-    x: MARGIN_X,
-    y,
-    size: 25,
-    font: fontSerif,
-    color: COLOR_INK,
-  });
+  pdf.drawText(personalInfo.fullName, MARGIN_X, y, "serif", 25, COLOR_INK);
 
   const locText = sanitizeWinAnsi(personalInfo.locationLabel.toUpperCase());
-  const locWidth = fontSans.widthOfTextAtSize(locText, 7.6);
-  page.drawText(locText, {
-    x: A4_WIDTH - MARGIN_X - locWidth,
-    y: y + 11,
-    size: 7.6,
-    font: fontSans,
-    color: COLOR_MUTED,
-  });
+  const locWidth = measureTextWidth(locText, "sans", 7.6);
+  pdf.drawText(locText, A4_WIDTH - MARGIN_X - locWidth, y + 11, "sans", 7.6, COLOR_MUTED);
 
   const availText = sanitizeWinAnsi(personalInfo.availability.toUpperCase());
-  const availWidth = fontSansBold.widthOfTextAtSize(availText, 7.4);
-  page.drawText(availText, {
-    x: A4_WIDTH - MARGIN_X - availWidth,
-    y: y - 1,
-    size: 7.4,
-    font: fontSansBold,
-    color: COLOR_INK,
-  });
+  const availWidth = measureTextWidth(availText, "sansBold", 7.4);
+  pdf.drawText(availText, A4_WIDTH - MARGIN_X - availWidth, y - 1, "sansBold", 7.4, COLOR_INK);
 
   y -= 17;
-  page.drawText(sanitizeWinAnsi(personalInfo.roleTitle), {
-    x: MARGIN_X,
-    y,
-    size: 10.4,
-    font: fontSansBold,
-    color: COLOR_BODY,
-  });
+  pdf.drawText(personalInfo.roleTitle, MARGIN_X, y, "sansBold", 10.4, COLOR_BODY);
 
   y -= 16;
   const contactItems = [
@@ -356,43 +260,26 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
 
   let contactX = MARGIN_X;
   const contactFontSize = 8.4;
-  const sepChar = sanitizeWinAnsi("·");
-  const sepW = fontSans.widthOfTextAtSize(sepChar, contactFontSize);
+  const sepChar = "·";
+  const sepW = measureTextWidth(sepChar, "sans", contactFontSize);
   const sepPad = 7;
 
   contactItems.forEach((item, idx) => {
     const labelText = sanitizeWinAnsi(item.label);
-    const labelW = fontSans.widthOfTextAtSize(labelText, contactFontSize);
-    page.drawText(labelText, {
-      x: contactX,
-      y,
-      size: contactFontSize,
-      font: fontSans,
-      color: COLOR_INK,
-    });
-    addUriLink(page, contactX, y, labelW, contactFontSize, item.url);
+    const labelW = measureTextWidth(labelText, "sans", contactFontSize);
+    pdf.drawText(labelText, contactX, y, "sans", contactFontSize, COLOR_INK);
+    pdf.addUriLink(contactX, y, labelW, contactFontSize, item.url, COLOR_HAIRLINE);
     contactX += labelW;
 
     if (idx < contactItems.length - 1) {
       contactX += sepPad;
-      page.drawText(sepChar, {
-        x: contactX,
-        y,
-        size: contactFontSize,
-        font: fontSans,
-        color: COLOR_MUTED,
-      });
+      pdf.drawText(sepChar, contactX, y, "sans", contactFontSize, COLOR_MUTED);
       contactX += sepW + sepPad;
     }
   });
 
   y -= 11;
-  page.drawLine({
-    start: { x: MARGIN_X, y },
-    end: { x: A4_WIDTH - MARGIN_X, y },
-    thickness: 1.0,
-    color: COLOR_ACCENT_RULE,
-  });
+  pdf.drawLine(MARGIN_X, y, A4_WIDTH - MARGIN_X, y, 1.0, COLOR_ACCENT_RULE);
 
   // =========================================================================
   // 01 / PROFILE
@@ -400,29 +287,17 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
   y -= 20;
   y = drawSectionHeader(labels.sectionProfile, MARGIN_X, y, CONTENT_WIDTH);
 
-  const bioLines = wrapText(heroData.bio, fontSans, 8.7, CONTENT_WIDTH, 3);
+  const bioLines = wrapText(heroData.bio, "sans", 8.7, CONTENT_WIDTH, 3);
   for (const line of bioLines) {
-    page.drawText(line, {
-      x: MARGIN_X,
-      y,
-      size: 8.7,
-      font: fontSans,
-      color: COLOR_BODY,
-    });
+    pdf.drawText(line, MARGIN_X, y, "sans", 8.7, COLOR_BODY);
     y -= 12.6;
   }
 
-  const specialtiesLine = sanitizeWinAnsi(heroData.specialtyChips.join("  ·  "));
-  const specLines = wrapText(specialtiesLine, fontSansBold, 7.7, CONTENT_WIDTH, 2);
+  const specialtiesLine = sanitizeWinAnsi(heroData.specialtyChips.join(" · "));
+  const specLines = wrapText(specialtiesLine, "sansBold", 7.7, CONTENT_WIDTH, 2);
   y -= 3;
   for (const line of specLines) {
-    page.drawText(line, {
-      x: MARGIN_X,
-      y,
-      size: 7.7,
-      font: fontSansBold,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(line, MARGIN_X, y, "sansBold", 7.7, COLOR_MUTED);
     y -= 11.2;
   }
 
@@ -437,49 +312,23 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
     const projTitle = sanitizeWinAnsi(custom?.title ?? project.title);
     const projMeta = sanitizeWinAnsi(custom?.meta ?? project.metadata);
     const projDesc = custom?.description ?? project.summary;
-    const projStack = sanitizeWinAnsi(
-      `${labels.stackPrefix} ${project.designStack.join(" · ")}`
-    );
+    const projStack = sanitizeWinAnsi(`${labels.stackPrefix} ${project.designStack.join(" · ")}`);
 
-    const metaW = fontSans.widthOfTextAtSize(projMeta, 7.6);
+    const metaW = measureTextWidth(projMeta, "sans", 7.6);
     const titleMaxW = CONTENT_WIDTH - metaW - 12;
-    const titleLine = wrapText(projTitle, fontSansBold, 9.1, titleMaxW, 1)[0] ?? projTitle;
+    const titleLine = wrapText(projTitle, "sansBold", 9.1, titleMaxW, 1)[0] ?? projTitle;
 
-    page.drawText(titleLine, {
-      x: MARGIN_X,
-      y,
-      size: 9.1,
-      font: fontSansBold,
-      color: COLOR_INK,
-    });
-    page.drawText(projMeta, {
-      x: A4_WIDTH - MARGIN_X - metaW,
-      y: y + 0.5,
-      size: 7.6,
-      font: fontSans,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(titleLine, MARGIN_X, y, "sansBold", 9.1, COLOR_INK);
+    pdf.drawText(projMeta, A4_WIDTH - MARGIN_X - metaW, y + 0.5, "sans", 7.6, COLOR_MUTED);
     y -= 12.2;
 
-    const descLines = wrapText(projDesc, fontSans, 8.3, CONTENT_WIDTH, 3);
+    const descLines = wrapText(projDesc, "sans", 8.3, CONTENT_WIDTH, 3);
     for (const line of descLines) {
-      page.drawText(line, {
-        x: MARGIN_X,
-        y,
-        size: 8.3,
-        font: fontSans,
-        color: COLOR_BODY,
-      });
+      pdf.drawText(line, MARGIN_X, y, "sans", 8.3, COLOR_BODY);
       y -= 11.6;
     }
 
-    page.drawText(projStack, {
-      x: MARGIN_X,
-      y: y + 0.4,
-      size: 7.4,
-      font: fontSans,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(projStack, MARGIN_X, y + 0.4, "sans", 7.4, COLOR_MUTED);
     y -= 15.5;
   }
 
@@ -488,40 +337,21 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
   if (featuredCase) {
     const prefixText = sanitizeWinAnsi(labels.portfolioPrefix);
     const behanceLabel = sanitizeWinAnsi(labels.viewBehance);
-    const behanceW = fontSansBold.widthOfTextAtSize(behanceLabel, 7.7);
+    const behanceW = measureTextWidth(behanceLabel, "sansBold", 7.7);
     const portfolioSummary =
       locale === "en"
         ? "Web Redesign & Editorial Art Direction (Wine tourism & bookings)"
         : "Rediseño Web & Dirección de Arte Editorial (enoturismo y reservas)";
 
-    page.drawText(prefixText, {
-      x: MARGIN_X,
-      y,
-      size: 8.1,
-      font: fontSansBold,
-      color: COLOR_INK,
-    });
-    const prefixW = fontSansBold.widthOfTextAtSize(prefixText, 8.1);
+    pdf.drawText(prefixText, MARGIN_X, y, "sansBold", 8.1, COLOR_INK);
+    const prefixW = measureTextWidth(prefixText, "sansBold", 8.1);
     const availableDescW = CONTENT_WIDTH - prefixW - behanceW - 14;
-    const clippedPortfolioDesc =
-      wrapText(portfolioSummary, fontSans, 8.0, availableDescW, 1)[0] ?? "";
-    page.drawText(clippedPortfolioDesc, {
-      x: MARGIN_X + prefixW + 4,
-      y,
-      size: 8.0,
-      font: fontSans,
-      color: COLOR_BODY,
-    });
+    const clippedPortfolioDesc = wrapText(portfolioSummary, "sans", 8.0, availableDescW, 1)[0] ?? "";
+    pdf.drawText(clippedPortfolioDesc, MARGIN_X + prefixW + 4, y, "sans", 8.0, COLOR_BODY);
 
     const linkX = A4_WIDTH - MARGIN_X - behanceW;
-    page.drawText(behanceLabel, {
-      x: linkX,
-      y,
-      size: 7.7,
-      font: fontSansBold,
-      color: COLOR_INK,
-    });
-    addUriLink(page, linkX, y, behanceW, 7.7, featuredCase.behanceUrl);
+    pdf.drawText(behanceLabel, linkX, y, "sansBold", 7.7, COLOR_INK);
+    pdf.addUriLink(linkX, y, behanceW, 7.7, featuredCase.behanceUrl, COLOR_HAIRLINE);
     y -= 16;
   }
 
@@ -535,55 +365,25 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
     const companyText = sanitizeWinAnsi(exp.company);
     const roleText = sanitizeWinAnsi(`— ${exp.role}`);
     const periodText = sanitizeWinAnsi(exp.period);
-    const periodW = fontSansBold.widthOfTextAtSize(periodText, 7.9);
+    const periodW = measureTextWidth(periodText, "sansBold", 7.9);
 
-    page.drawText(companyText, {
-      x: MARGIN_X,
-      y,
-      size: 9.1,
-      font: fontSansBold,
-      color: COLOR_INK,
-    });
-    const companyW = fontSansBold.widthOfTextAtSize(companyText, 9.1);
+    pdf.drawText(companyText, MARGIN_X, y, "sansBold", 9.1, COLOR_INK);
+    const companyW = measureTextWidth(companyText, "sansBold", 9.1);
     const roleOffsetX = MARGIN_X + companyW + 5;
     const maxRoleW = A4_WIDTH - MARGIN_X - periodW - roleOffsetX - 10;
-    const clippedRole = wrapText(roleText, fontSans, 8.5, maxRoleW, 1)[0] ?? "";
-    page.drawText(clippedRole, {
-      x: roleOffsetX,
-      y,
-      size: 8.5,
-      font: fontSans,
-      color: COLOR_BODY,
-    });
+    const clippedRole = wrapText(roleText, "sans", 8.5, maxRoleW, 1)[0] ?? "";
+    pdf.drawText(clippedRole, roleOffsetX, y, "sans", 8.5, COLOR_BODY);
 
-    page.drawText(periodText, {
-      x: A4_WIDTH - MARGIN_X - periodW,
-      y: y + 0.5,
-      size: 7.9,
-      font: fontSansBold,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(periodText, A4_WIDTH - MARGIN_X - periodW, y + 0.5, "sansBold", 7.9, COLOR_MUTED);
     y -= 11.4;
 
-    page.drawText(sanitizeWinAnsi(exp.subtitle), {
-      x: MARGIN_X,
-      y,
-      size: 7.5,
-      font: fontSans,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(exp.subtitle, MARGIN_X, y, "sans", 7.5, COLOR_MUTED);
     y -= 11.8;
 
     const expDesc = labels.experienceSummaries[exp.id] ?? exp.description;
-    const descLines = wrapText(expDesc, fontSans, 8.3, CONTENT_WIDTH, 3);
+    const descLines = wrapText(expDesc, "sans", 8.3, CONTENT_WIDTH, 3);
     for (const line of descLines) {
-      page.drawText(line, {
-        x: MARGIN_X,
-        y,
-        size: 8.3,
-        font: fontSans,
-        color: COLOR_BODY,
-      });
+      pdf.drawText(line, MARGIN_X, y, "sans", 8.3, COLOR_BODY);
       y -= 11.6;
     }
 
@@ -607,71 +407,34 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
   for (const edu of educationData) {
     const instText = sanitizeWinAnsi(edu.institution);
     const periodText = sanitizeWinAnsi(edu.period);
-    const periodW = fontSansBold.widthOfTextAtSize(periodText, 7.5);
-    const instLine =
-      wrapText(instText, fontSansBold, 8.7, leftColWidth - periodW - 8, 1)[0] ?? instText;
+    const periodW = measureTextWidth(periodText, "sansBold", 7.5);
+    const instLine = wrapText(instText, "sansBold", 8.7, leftColWidth - periodW - 8, 1)[0] ?? instText;
 
-    page.drawText(instLine, {
-      x: MARGIN_X,
-      y: leftY,
-      size: 8.7,
-      font: fontSansBold,
-      color: COLOR_INK,
-    });
-    page.drawText(periodText, {
-      x: MARGIN_X + leftColWidth - periodW,
-      y: leftY + 0.4,
-      size: 7.5,
-      font: fontSansBold,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(instLine, MARGIN_X, leftY, "sansBold", 8.7, COLOR_INK);
+    pdf.drawText(periodText, MARGIN_X + leftColWidth - periodW, leftY + 0.4, "sansBold", 7.5, COLOR_MUTED);
     leftY -= 11.8;
 
-    const degLines = wrapText(edu.degree, fontSans, 8.1, leftColWidth, 2);
+    const degLines = wrapText(edu.degree, "sans", 8.1, leftColWidth, 2);
     for (const line of degLines) {
-      page.drawText(line, {
-        x: MARGIN_X,
-        y: leftY,
-        size: 8.1,
-        font: fontSans,
-        color: COLOR_BODY,
-      });
+      pdf.drawText(line, MARGIN_X, leftY, "sans", 8.1, COLOR_BODY);
       leftY -= 10.8;
     }
 
-    page.drawText(sanitizeWinAnsi(edu.highlight), {
-      x: MARGIN_X,
-      y: leftY,
-      size: 7.6,
-      font: fontSansBold,
-      color: COLOR_MUTED,
-    });
+    pdf.drawText(edu.highlight, MARGIN_X, leftY, "sansBold", 7.6, COLOR_MUTED);
     leftY -= 12;
 
     if (edu.id === "coderhouse") {
       for (const course of labels.coderhouseShortItems) {
-        const cLines = wrapText(`• ${course}`, fontSans, 7.5, leftColWidth, 2);
+        const cLines = wrapText(`• ${course}`, "sans", 7.5, leftColWidth, 2);
         for (const cLine of cLines) {
-          page.drawText(cLine, {
-            x: MARGIN_X,
-            y: leftY,
-            size: 7.5,
-            font: fontSans,
-            color: COLOR_BODY,
-          });
+          pdf.drawText(cLine, MARGIN_X, leftY, "sans", 7.5, COLOR_BODY);
           leftY -= 10.4;
         }
       }
     } else if (edu.details[0]) {
-      const detLines = wrapText(edu.details[0], fontSans, 7.6, leftColWidth, 2);
+      const detLines = wrapText(edu.details[0], "sans", 7.6, leftColWidth, 2);
       for (const dLine of detLines) {
-        page.drawText(dLine, {
-          x: MARGIN_X,
-          y: leftY,
-          size: 7.6,
-          font: fontSans,
-          color: COLOR_BODY,
-        });
+        pdf.drawText(dLine, MARGIN_X, leftY, "sans", 7.6, COLOR_BODY);
         leftY -= 10.4;
       }
     }
@@ -683,25 +446,13 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
   let rightY = drawSectionHeader(labels.sectionStack, rightColX, twoColTopY, rightColWidth);
 
   for (const category of stackCategories) {
-    page.drawText(sanitizeWinAnsi(category.title), {
-      x: rightColX,
-      y: rightY,
-      size: 8.4,
-      font: fontSansBold,
-      color: COLOR_INK,
-    });
+    pdf.drawText(category.title, rightColX, rightY, "sansBold", 8.4, COLOR_INK);
     rightY -= 11.4;
 
     const itemsText = category.items.join(" · ");
-    const itemLines = wrapText(itemsText, fontSans, 7.9, rightColWidth, 3);
+    const itemLines = wrapText(itemsText, "sans", 7.9, rightColWidth, 3);
     for (const line of itemLines) {
-      page.drawText(line, {
-        x: rightColX,
-        y: rightY,
-        size: 7.9,
-        font: fontSans,
-        color: COLOR_BODY,
-      });
+      pdf.drawText(line, rightColX, rightY, "sans", 7.9, COLOR_BODY);
       rightY -= 10.8;
     }
 
@@ -710,59 +461,40 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
 
   // Subtle vertical hairline between bottom two columns
   const dividerBottomY = Math.max(Math.min(leftY, rightY) + 8, 44);
-  page.drawLine({
-    start: { x: MARGIN_X + leftColWidth + colGap / 2, y: twoColTopY - 12 },
-    end: { x: MARGIN_X + leftColWidth + colGap / 2, y: dividerBottomY },
-    thickness: 0.45,
-    color: COLOR_HAIRLINE,
-  });
+  pdf.drawLine(
+    MARGIN_X + leftColWidth + colGap / 2,
+    twoColTopY - 12,
+    MARGIN_X + leftColWidth + colGap / 2,
+    dividerBottomY,
+    0.45,
+    COLOR_HAIRLINE
+  );
 
   // =========================================================================
   // FOOTER (Portfolio Link + Page Indicator)
   // =========================================================================
   const footerRuleY = 32;
-  page.drawLine({
-    start: { x: MARGIN_X, y: footerRuleY },
-    end: { x: A4_WIDTH - MARGIN_X, y: footerRuleY },
-    thickness: 0.5,
-    color: COLOR_HAIRLINE,
-  });
+  pdf.drawLine(MARGIN_X, footerRuleY, A4_WIDTH - MARGIN_X, footerRuleY, 0.5, COLOR_HAIRLINE);
 
   const footerY = 20;
   const noteText = sanitizeWinAnsi(labels.footerNote);
-  page.drawText(noteText, {
-    x: MARGIN_X,
-    y: footerY,
-    size: 7.3,
-    font: fontSans,
-    color: COLOR_MUTED,
-  });
-  const noteW = fontSans.widthOfTextAtSize(noteText, 7.3);
+  pdf.drawText(noteText, MARGIN_X, footerY, "sans", 7.3, COLOR_MUTED);
+  const noteW = measureTextWidth(noteText, "sans", 7.3);
   const linkLabel = "linktr.ee/Alekei";
   const linkX = MARGIN_X + noteW + 5;
-  const linkW = fontSansBold.widthOfTextAtSize(linkLabel, 7.3);
-  page.drawText(linkLabel, {
-    x: linkX,
-    y: footerY,
-    size: 7.3,
-    font: fontSansBold,
-    color: COLOR_INK,
-  });
-  addUriLink(page, linkX, footerY, linkW, 7.3, personalInfo.linktreeUrl);
+  const linkW = measureTextWidth(linkLabel, "sansBold", 7.3);
+  pdf.drawText(linkLabel, linkX, footerY, "sansBold", 7.3, COLOR_INK);
+  pdf.addUriLink(linkX, footerY, linkW, 7.3, personalInfo.linktreeUrl, COLOR_HAIRLINE);
 
   const pageNumText = "A4 · 1 / 1";
-  const pageNumW = fontSans.widthOfTextAtSize(pageNumText, 7.3);
-  page.drawText(pageNumText, {
-    x: A4_WIDTH - MARGIN_X - pageNumW,
-    y: footerY,
-    size: 7.3,
-    font: fontSans,
-    color: COLOR_MUTED,
+  const pageNumW = measureTextWidth(pageNumText, "sans", 7.3);
+  pdf.drawText(pageNumText, A4_WIDTH - MARGIN_X - pageNumW, footerY, "sans", 7.3, COLOR_MUTED);
+
+  return pdf.save({
+    title: labels.docTitle,
+    author: personalInfo.fullName,
+    subject: labels.docSubject,
+    keywords: labels.docKeywords,
+    creator: `${personalInfo.shortName} Portfolio`,
   });
-
-  if (linkAnnotations.length > 0) {
-    page.node.set(PDFName.of("Annots"), pdfDoc.context.obj(linkAnnotations));
-  }
-
-  return pdfDoc.save({ useObjectStreams: false });
 }
