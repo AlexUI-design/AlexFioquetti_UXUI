@@ -42,7 +42,7 @@ const stickyProjectsEn: StickyProject[] = [
     metadata: "MVP Phase 2 (1 Year) · 5-Person Squad (Core Pod) · Daily Scrum",
     title: "Multi-Product Digital Ecosystem for Loyalty, Document Management & Assistance",
     summary:
-      "End-to-end UX/UI design leadership orchestrating Advanta's digital ecosystem: Loyalty Club (web loyalty, self-service & backoffice), anti-silo Document Library, Conversational Chatbot, and its administrative console.",
+      "Led end-to-end UX/UI design to orchestrate Advanta's digital ecosystem: Loyalty Club (web loyalty, self-service & backoffice), silo-free Document Library, Conversational Chatbot, and its administrative console.",
     chips: ["MVP Phase 2 (1 Year)", "5-Person Squad (Core Pod)", "Daily Scrum"],
     cover: {
       id: "p01-bobot-campanas-listado",
@@ -58,12 +58,12 @@ const stickyProjectsEn: StickyProject[] = [
     challenge:
       "Unify multiple independent products under a single brand and permissions architecture serving different user tiers (Growers, Distributors, and Administrators), eliminating information silos and operational friction across invoice uploads, reward redemption, and technical inquiries.",
     roleContributions: [
-      "Sole UX/UI designer inside a multidisciplinary Core Pod (Frontend, Backend, QA, and PM), participating in daily standups, technical refinements, and Jira estimations.",
-      "Design System governance using Atomic Design in Figma, bridging Club Advanta's dark mode with the high tabular density of Document Library and Backoffice.",
+      "Led UX/UI design as the sole designer inside a multidisciplinary Core Pod (Frontend, Backend, QA, and PM), contributing to daily standups, technical refinements, and Jira estimations.",
+      "Governed the Design System using Atomic Design in Figma, bridging Club Advanta's dark mode with the high tabular density of Document Library and Backoffice.",
       "Designed hierarchical role & permission matrices, conversational flows for the assisted chatbot, and actionable microcopy across validations and modals.",
     ],
     impact:
-      "Sustained engagement across a ~1-year continuous cycle leading to the MVP Phase 2 launch, with five interconnected solutions operating in visual and functional harmony.",
+      "Drove continuous product evolution over a ~1-year cycle through the MVP Phase 2 launch, delivering five interconnected solutions operating in visual and functional harmony.",
     designStack: ["Figma", "Atomic Design", "Jira", "Scrum", "UX Writing", "Role Architecture"],
     tabs: [
       {
@@ -389,7 +389,7 @@ const stickyProjectsEn: StickyProject[] = [
     metadata: "Native Mobile (iOS/Android) · Responsive Web · Data Visualization",
     title: "Zone-Based Interactive Reports, Multimodal Field Scouting & Grower Delivery",
     summary:
-      "Web and mobile solution for agricultural technicians and growers focused on zone-based weed scouting (geotagged photos, audio notes, and comments), real-time agronomy analysis, and interactive report sharing.",
+      "Designed a web and mobile solution for agricultural technicians and growers focused on zone-based weed scouting (geotagged photos, audio notes, and comments), real-time agronomy analysis, and interactive report sharing.",
     chips: ["Native Mobile (iOS/Android)", "Responsive Web", "Data Visualization"],
     cover: {
       id: "p02-syngenta-web-malezas",
@@ -527,7 +527,7 @@ const stickyProjectsEn: StickyProject[] = [
     metadata: "Responsive Web · WhatsApp Bot · B2B Commerce",
     title: "B2B Ordering Portal with Tax ID Validation, Stock Alerts & WhatsApp Bot",
     summary:
-      "Responsive web interface and conversational WhatsApp flow allowing Scalter's B2B customers to sign in with verified Tax ID (CUIT), manage orders on a technical table, get instant out-of-stock alerts, and check live order status.",
+      "Designed the responsive web interface and conversational WhatsApp flow allowing Scalter's B2B customers to sign in with a verified Tax ID (CUIT), manage orders on a technical table, get instant out-of-stock alerts, and check live order status.",
     chips: ["Responsive Web", "WhatsApp Bot", "B2B Commerce"],
     cover: {
       id: "p03-scalter-web-panel",
@@ -543,9 +543,9 @@ const stickyProjectsEn: StickyProject[] = [
     challenge:
       "Replace manual intake of industrial orders involving multiple technical parameters (type, SKU, color, GSM, width, and roll count) with a fast Tax ID-gated portal that prevents stock mismatches and seamlessly bridges WhatsApp.",
     roleContributions: [
-      "Designed secure login and Tax ID (CUIT) validation flow granting verified customers access to the commercial ordering table.",
+      "Designed the secure login and Tax ID (CUIT) validation flow granting verified customers access to the commercial ordering table.",
       "Crafted quick-add modals with live total calculation and clear preventive alerts whenever a selected SKU or color is out of stock.",
-      "Designed WhatsApp Bot conversational flows for stock checks, production tracking, and automatic handoff to the Web Assistant on 3+ item orders.",
+      "Structured WhatsApp Bot conversational flows for stock checks, production tracking, and automatic handoff to the Web Assistant on 3+ item orders.",
     ],
     impact:
       "Standardized B2B order intake with zero cross-channel friction, eliminating back-and-forth over stock shortages before order confirmation.",
@@ -693,7 +693,7 @@ const portfolioCasesEn: PortfolioCase[] = [
     overline: "CASE STUDY · UX/UI & ART DIRECTION",
     title: "Bodega Tierras Altas — Web Redesign & Digital Experience",
     description:
-      "Complete digital redesign for a high-end Mendoza wine tourism estate. Architecture centered on guided tour and lunch bookings (Juana María Restaurant), an interactive wine catalog (Insignia 2018), visitor reviews, and high-contrast editorial art direction.",
+      "Redesigned the end-to-end digital experience for a high-end Mendoza wine tourism estate. Centered the architecture on direct tour and lunch bookings (Juana María Restaurant), an interactive wine catalog (Insignia 2018), visitor reviews, and high-contrast editorial art direction.",
     tags: ["#Web_Redesign", "#Wine_Tourism", "#Editorial_UI", "#IA_Architecture", "#Figma"],
     cover: {
       id: "pf01-bodega-cover",
@@ -729,7 +729,7 @@ const experienceListEn: ExperienceEntry[] = [
     subtitle: "Technology innovation lab · Remote",
     role: "UX/UI Designer · UX Researcher · UX Writer",
     description:
-      "Lead designer across multidisciplinary squads (5-person Core Pods: Frontend, Backend, UX/UI, QA, and PM). Design ownership in close partnership with Product Management, Jira story-point estimation, Scrum ceremonies, and direct client discovery facilitation.",
+      "I lead end-to-end UX/UI design across multidisciplinary squads (5-person Core Pods: Frontend, Backend, UX/UI, QA, and PM). I partner closely with Product Management, contribute to Jira story-point estimations and Scrum ceremonies, and facilitate direct client discovery.",
     tags: ["Atomic Design", "Scrum Dailies", "Client Discovery", "CRUD Consoles"],
   },
   {
@@ -739,7 +739,7 @@ const experienceListEn: ExperienceEntry[] = [
     subtitle: "Independent Designer / Freelance",
     role: "Industrial Designer & Visual Communication",
     description:
-      "Physical product development, bespoke custom furniture (desks, shelving, bookcases), parametric 3D CAD modeling, and visual identity systems (logos, brand guidelines, and digital/print collateral) for private clients and institutions.",
+      "Developed physical products, bespoke custom furniture (desks, shelving, and bookcases), parametric 3D CAD models, and visual identity systems (logos, brand guidelines, and digital/print collateral) for private clients and institutions.",
     tags: ["3D Modeling", "SolidWorks", "Ergonomics", "Branding", "Illustrator"],
   },
   {
@@ -749,7 +749,7 @@ const experienceListEn: ExperienceEntry[] = [
     subtitle: "Hotel & Entertainment Complex · Mendoza",
     role: "Floor Operations · Cage Management & VIP Loyalty",
     description:
-      "Over a decade engaging face-to-face with thousands of guests in high-pressure, emotionally charged environments. Precision cash reconciliation, shift leadership, immediate conflict resolution, and VIP guest retention.",
+      "For over a decade, I engaged face-to-face with thousands of guests in high-pressure, emotionally charged environments. Managed zero-error cash reconciliation, led shift operations, resolved conflicts in real time, and drove VIP guest retention.",
     tags: [
       "Face-to-Face Empathy",
       "Composure Under Pressure",

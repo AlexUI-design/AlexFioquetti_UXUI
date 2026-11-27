@@ -126,7 +126,7 @@ export const stickyProjects: StickyProject[] = [
     metadata: "Fase MVP 2 (1 Año) · Squad 5 Personas (Core Pod) · Scrum Diario",
     title: "Ecosistema Digital Multiproducto para Fidelización, Gestión Documental y Asistencia",
     summary:
-      "Liderazgo integral de diseño UX/UI de punta a punta para orquestar el ecosistema digital de Advanta: Club de Fidelización (web loyalty, autogestión y backoffice), Biblioteca Documental anti-silos, Chatbot conversacional y su consola administrativa.",
+      "Lideré el diseño UX/UI de punta a punta para orquestar el ecosistema digital de Advanta: Club de Fidelización (web loyalty, autogestión y backoffice), Biblioteca Documental sin silos, Chatbot conversacional y su consola administrativa.",
     chips: ["Fase MVP 2 (1 Año)", "Squad 5 Personas (Core Pod)", "Scrum Diario"],
     cover: {
       id: "p01-bobot-campanas-listado",
@@ -142,12 +142,12 @@ export const stickyProjects: StickyProject[] = [
     challenge:
       "Unificar bajo una misma arquitectura de marca y permisos múltiples productos independientes con distintos niveles de usuario (Productores, Distribuidores y Administradores), evitando silos de información y fricción operativa en la carga de facturas, canje de beneficios y consulta técnica.",
     roleContributions: [
-      "Único diseñador UX/UI a cargo dentro de un Core Pod multidisciplinario (Frontend, Backend, QA y PM), participando en dailies, refinamientos técnicos y estimaciones en Jira.",
-      "Gobernanza de Design System bajo metodología Atomic Design en Figma, articulando el modo oscuro de Club Advanta y la alta densidad tabular de Biblioteca y Backoffice.",
-      "Diseño de matrices jerárquicas de roles y permisos, flujos conversacionales para el chatbot asistido y microcopy resolutivo en validaciones y modales.",
+      "Lideré el diseño UX/UI como único diseñador dentro de un Core Pod multidisciplinario (Frontend, Backend, QA y PM), participando en dailies, refinamientos técnicos y estimaciones en Jira.",
+      "Goberné el Design System bajo Atomic Design en Figma, articulando el modo oscuro de Club Advanta con la alta densidad tabular de Biblioteca y Backoffice.",
+      "Definí matrices jerárquicas de roles y permisos, flujos conversacionales para el chatbot asistido y microcopy resolutivo en validaciones y modales.",
     ],
     impact:
-      "Continuidad extendida durante un ciclo continuo de ~1 año hasta el lanzamiento de la Fase MVP 2 con cinco soluciones interconectadas operando en coherencia visual y funcional.",
+      "Acompañé la evolución del ecosistema durante ~1 año hasta lanzar la Fase MVP 2, dejando cinco soluciones interconectadas operando en coherencia visual y funcional.",
     designStack: ["Figma", "Atomic Design", "Jira", "Scrum", "UX Writing", "Arquitectura de Roles"],
     tabs: [
       {
@@ -473,7 +473,7 @@ export const stickyProjects: StickyProject[] = [
     metadata: "Mobile Nativo (iOS/Android) · Web Responsive · Data Visualization",
     title: "Informes Interactivos por Zonas, Relevamiento Multimodal en Campo y Envío a Productores",
     summary:
-      "Solución web y móvil para técnicos y productores agropecuarios orientada al relevamiento de malezas en lotes por zonas (fotos, audios y comentarios georreferenciados), análisis agronómico en tiempo real y envío de informes interactivos.",
+      "Diseñé una solución web y móvil para técnicos y productores agropecuarios orientada al relevamiento de malezas en lotes por zonas (fotos, audios y comentarios georreferenciados), análisis agronómico en tiempo real y envío de informes interactivos.",
     chips: ["Mobile Nativo (iOS/Android)", "Web Responsive", "Data Visualization"],
     cover: {
       id: "p02-syngenta-web-malezas",
@@ -489,12 +489,12 @@ export const stickyProjects: StickyProject[] = [
     challenge:
       "Traducir grandes volúmenes de mediciones agronómicas de campo (densidad lograda, desuniformidad espacial/temporal, malezas y plagas por ambiente) en informes visuales accionables que el técnico pueda armar con rapidez y el productor pueda leer desde el teléfono en pleno lote.",
     roleContributions: [
-      "Conducción de entrevistas a usuarios finales y discovery en dupla operativa directa con el Product Manager para mapear dolores de técnicos en campo.",
-      "Arquitectura de información de pantallas web de alta densidad analítica integrando mapa satelital interactivo, puntos de muestreo, notas, galería de fotos y audios.",
-      "Diseño de experiencia móvil optimizada por pestañas para consultar fichas de siembra, tablas por ambiente, fotos y notas de voz grabadas por punto.",
+      "Conduje entrevistas con usuarios finales y sesiones de discovery en dupla directa con el Product Manager para mapear los dolores de técnicos en campo.",
+      "Estructuré la arquitectura de información de pantallas web de alta densidad analítica integrando mapa satelital interactivo, puntos de muestreo, notas, galería de fotos y audios.",
+      "Diseñé una experiencia móvil organizada por pestañas para consultar fichas de siembra, tablas por ambiente, evidencia fotográfica y notas de voz grabadas por punto.",
     ],
     impact:
-      "Reducción significativa de la fricción cognitiva al interpretar desvíos de siembra y malezas, agilizando el envío selectivo de visitas completas al productor.",
+      "Reduje la fricción cognitiva al interpretar desvíos de siembra y presión de malezas, agilizando el envío selectivo de visitas completas al productor.",
     designStack: ["Figma", "Discovery con PM", "Data Visualization", "Responsive UI", "Mobile UX"],
     tabs: [
       {
@@ -611,7 +611,7 @@ export const stickyProjects: StickyProject[] = [
     metadata: "Web Responsive · Bot WhatsApp · Comercio B2B",
     title: "Portal B2B de Pedidos con Validación de CUIT, Alertas de Stock y Bot de WhatsApp",
     summary:
-      "Diseño de interfaz web responsive y flujo conversacional en WhatsApp para que clientes B2B de Scalter ingresen con sus credenciales y CUIT habilitante, gestionen pedidos sobre tabla técnica, reciban alertas cuando falta stock y consulten estados en vivo.",
+      "Diseñé la interfaz web responsive y el flujo conversacional en WhatsApp para que clientes B2B de Scalter ingresen con su CUIT habilitado, gestionen pedidos en una tabla técnica, reciban alertas preventivas de stock y sigan estados en vivo.",
     chips: ["Web Responsive", "Bot WhatsApp", "Comercio B2B"],
     cover: {
       id: "p03-scalter-web-panel",
@@ -627,12 +627,12 @@ export const stickyProjects: StickyProject[] = [
     challenge:
       "Reemplazar la toma manual de pedidos industriales con múltiples variables técnicas (tipo, código, color, gramaje, ancho y rollos) mediante un portal ágil habilitado por CUIT que previene errores de disponibilidad y convive fluidamente con el canal de WhatsApp.",
     roleContributions: [
-      "Diseño del flujo de ingreso seguro con credenciales y validación de CUIT habilitante para operar sobre la tabla comercial de pedidos.",
-      "Diseño de modales de carga rápida con cálculo dinámico del total y mensajes preventivos claros cuando un artículo o color seleccionado no cuenta con stock disponible.",
-      "Diseño conversacional del Bot de WhatsApp para consulta de stock, seguimiento en producción y derivación automática al Asistente Web en pedidos de +3 artículos.",
+      "Diseñé el flujo de ingreso seguro con credenciales y validación de CUIT habilitado para operar sobre la tabla comercial de pedidos.",
+      "Creé modales de carga rápida con cálculo dinámico del total y mensajes preventivos claros cuando un artículo o color no cuenta con stock disponible.",
+      "Estructuré el flujo conversacional del Bot de WhatsApp para consultar stock, seguir pedidos en producción y derivar automáticamente órdenes de +3 artículos al Asistente Web.",
     ],
     impact:
-      "Estandarización de la carga de pedidos B2B sin fricción entre canales, eliminando idas y vueltas por falta de stock antes de confirmar la orden.",
+      "Estandaricé la carga de pedidos B2B sin fricción entre canales, eliminando idas y vueltas por falta de stock antes de confirmar cada orden.",
     designStack: ["Figma", "Responsive Design", "Conversational UX", "UX Writing", "Flujos B2B"],
     tabs: [
       {
@@ -777,7 +777,7 @@ export const portfolioCases: PortfolioCase[] = [
     overline: "CASO DE ESTUDIO · UX/UI & DIRECCIÓN DE ARTE",
     title: "Bodega Tierras Altas — Rediseño Web & Experiencia Digital",
     description:
-      "Rediseño integral de la experiencia digital para una bodega mendocina de enoturismo y alta gama. Arquitectura enfocada en la reserva de visitas guiadas y almuerzos (Restaurante Juana María), catálogo interactivo de vinos (Insignia 2018), testimonios de visitantes y dirección de arte editorial de alto contraste.",
+      "Rediseñé integralmente la experiencia digital de una bodega mendocina de enoturismo y alta gama. Enfoqué la arquitectura en la reserva directa de visitas guiadas y almuerzos (Restaurante Juana María), un catálogo interactivo de vinos (Insignia 2018), testimonios de visitantes y una dirección de arte editorial de alto contraste.",
     tags: ["#Rediseño_Web", "#Enoturismo", "#UI_Editorial", "#Arquitectura_IA", "#Figma"],
     cover: {
       id: "pf01-bodega-cover",
@@ -813,7 +813,7 @@ export const experienceList: ExperienceEntry[] = [
     subtitle: "Laboratorio de innovación tecnológica · Remoto",
     role: "Diseñador UX/UI · UX Researcher · UX Writer",
     description:
-      "Diseñador a cargo en squads multidisciplinarios (Core Pods de 5 integrantes: Frontend, Backend, UX/UI, QA y PM). Liderazgo de diseño en estrecha co-creación con Product Management, estimación de tareas en Jira, ceremonias Scrum y facilitación de discovery directo con clientes.",
+      "Lidero el diseño UX/UI en squads multidisciplinarios (Core Pods de 5 integrantes: Frontend, Backend, UX/UI, QA y PM). Co-creo junto a Product Management, participo en estimaciones en Jira y ceremonias Scrum, y facilito sesiones de discovery directo con clientes.",
     tags: ["Atomic Design", "Scrum Dailies", "Discovery Clientes", "Consolas ABM"],
   },
   {
@@ -823,7 +823,7 @@ export const experienceList: ExperienceEntry[] = [
     subtitle: "Profesional Independiente / Freelance",
     role: "Diseñador Industrial & Comunicación Visual",
     description:
-      "Desarrollo de productos físicos, mobiliario custom a medida (escritorios, librerías, repisas), modelado CAD paramétrico tridimensional y desarrollo de identidad visual (logotipos, manuales de marca y piezas gráficas digitales e impresas) para clientes particulares e instituciones.",
+      "Desarrollé productos físicos, mobiliario custom a medida (escritorios, librerías y repisas), modelado CAD paramétrico tridimensional e identidad visual (logotipos, manuales de marca y piezas digitales e impresas) para clientes particulares e instituciones.",
     tags: ["Modelado 3D", "SolidWorks", "Ergonomía", "Branding", "Illustrator"],
   },
   {
@@ -833,7 +833,7 @@ export const experienceList: ExperienceEntry[] = [
     subtitle: "Complejo Hotelero y de Entretenimiento · Mendoza",
     role: "Operaciones de Salón · Manejo de Caja & Fidelización VIP",
     description:
-      "Más de una década interactuando cara a cara con miles de perfiles en escenarios de alta carga emocional y ritmo exigente. Arqueo y custodia de valores con exactitud matemática, liderazgo operativo de turnos, resolución inmediata de conflictos y fidelización de clientes VIP.",
+      "Durante más de una década atendí cara a cara a miles de personas en escenarios de alta carga emocional y ritmo exigente. Gestioné el arqueo y custodia de valores con cero margen de error, lideré turnos operativos, resolví conflictos en tiempo real y fidelicé clientes VIP.",
     tags: [
       "Empatía Cara a Cara",
       "Templanza bajo Presión",

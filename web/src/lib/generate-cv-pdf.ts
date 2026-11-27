@@ -67,28 +67,28 @@ const PDF_LABELS: Record<Locale, PdfLabels> = {
         title: "Advanta — Ecosistema Digital Multiproducto (Club Loyalty, Biblioteca y Bot)",
         meta: "Flock IT · MVP 2 (1 Año) · Core Pod",
         description:
-          "Único UX/UI en Core Pod (5 personas, Scrum). Diseño punta a punta y gobernanza Atomic Design en Figma para 5 productos integrados: Club de Fidelización, Backoffice ABM, Biblioteca Documental con roles y Chatbot.",
+          "Lideré el diseño UX/UI como único diseñador en un Core Pod (5 personas, Scrum). Goberné el Design System Atomic Design en Figma para 5 productos: Club de Fidelización, Backoffice ABM, Biblioteca por roles y Chatbot.",
       },
       syngenta: {
         title: "Syngenta — Informes Interactivos por Zonas & Relevamiento en Campo",
         meta: "Flock IT · Web & Mobile Nativo",
         description:
-          "Entrevistas a técnicos y discovery junto a PM. Arquitectura de paneles analíticos con mapa satelital zonificado, KPIs de siembra/malezas y app móvil por pestañas con fotos y audios georreferenciados.",
+          "Conduje entrevistas con técnicos y discovery junto a PM. Estructuré paneles analíticos con mapa satelital zonificado, KPIs de siembra/malezas y una app móvil por pestañas con fotos y audios georreferenciados.",
       },
       scalter: {
         title: "Scalter — Portal B2B de Pedidos, Validación CUIT y Bot de WhatsApp",
         meta: "Flock IT · Web Responsive & Bot",
         description:
-          "Portal comercial B2B con validación por CUIT, tabla técnica responsive, alertas preventivas de stock y flujo conversacional en WhatsApp con derivación inteligente al Asistente Web en pedidos de +3 ítems.",
+          "Diseñé el portal comercial B2B con validación por CUIT, tabla técnica responsive, alertas preventivas de stock y el flujo conversacional en WhatsApp con derivación al Asistente Web en pedidos de +3 ítems.",
       },
     },
     experienceSummaries: {
       "flock-it":
-        "Diseño de producto end-to-end en Core Pods multidisciplinarios (FE, BE, QA, PM). Co-creación con Product Management, estimaciones en Jira, ceremonias Scrum, Design Systems en Figma y discovery directo con clientes.",
+        "Lidero el diseño de producto end-to-end en Core Pods multidisciplinarios (FE, BE, QA, PM). Co-creo junto a Product Management, participo en estimaciones en Jira, Scrum, Design Systems en Figma y discovery con clientes.",
       freelance:
-        "Desarrollo de productos físicos, mobiliario custom a medida, modelado CAD 3D paramétrico e identidad visual (logotipos, manuales de marca y piezas digitales/impresas) para clientes e instituciones.",
+        "Desarrollé productos físicos, mobiliario custom a medida, modelado CAD 3D paramétrico e identidad visual (logotipos, manuales de marca y piezas digitales e impresas) para clientes particulares e instituciones.",
       "casino-arena":
-        "Más de una década en atención cara a cara en escenarios de alta presión. Arqueo de valores con cero error, liderazgo operativo de turnos, resolución inmediata de conflictos y fidelización de clientes VIP.",
+        "Durante más de una década atendí cara a cara en escenarios de alta presión. Gestioné arqueos de valores con cero margen de error, lideré turnos operativos, resolví conflictos en vivo y fidelicé clientes VIP.",
     },
     coderhouseShortItems: [
       "UX/UI Avanzado — Design Systems, Variables, Handoff",
@@ -125,28 +125,28 @@ const PDF_LABELS: Record<Locale, PdfLabels> = {
         title: "Advanta — Multi-Product Digital Ecosystem (Loyalty Club, Library & Bot)",
         meta: "Flock IT · MVP 2 (1 Yr) · Core Pod",
         description:
-          "Sole UX/UI designer in a 5-person Scrum Core Pod. End-to-end design and Atomic Design governance in Figma across 5 connected products: Loyalty Club, Admin CRUD Backoffice, role-based Library, and Chatbot.",
+          "Led UX/UI design as the sole designer in a 5-person Scrum Core Pod. Governed the Atomic Design System in Figma across 5 connected products: Loyalty Club, Admin CRUD Backoffice, role-based Library, and Chatbot.",
       },
       syngenta: {
         title: "Syngenta — Zone-Based Interactive Reports & Multimodal Field Scouting",
         meta: "Flock IT · Web & Native Mobile",
         description:
-          "Led user interviews and PM-paired discovery. Architected analytics dashboards with zoned satellite maps, planting/weed KPIs, and a tabbed mobile experience for geotagged photos and voice notes.",
+          "Conducted user interviews and PM-paired discovery. Architected analytics dashboards with zoned satellite maps, planting/weed KPIs, and a tabbed mobile experience for geotagged photos and voice notes.",
       },
       scalter: {
         title: "Scalter — B2B Ordering Portal, Tax ID Validation & WhatsApp Bot",
         meta: "Flock IT · Responsive Web & Bot",
         description:
-          "Self-service B2B portal with verified Tax ID access, responsive technical ordering table, preventive out-of-stock alerts, and WhatsApp Bot routing 3+ item orders smoothly into the Web Assistant.",
+          "Designed a self-service B2B portal with verified Tax ID access, responsive technical ordering table, preventive stock alerts, and a WhatsApp Bot routing 3+ item orders smoothly into the Web Assistant.",
       },
     },
     experienceSummaries: {
       "flock-it":
-        "End-to-end product design across multidisciplinary Core Pods (FE, BE, QA, PM). Close PM collaboration, Jira story-point estimation, Scrum rituals, Figma Design Systems, and direct client discovery.",
+        "Lead end-to-end product design across multidisciplinary Core Pods (FE, BE, QA, PM). Partner with Product Management on Jira estimations, Scrum rituals, Figma Design Systems, and direct client discovery.",
       freelance:
-        "Physical product development, bespoke custom furniture, parametric 3D CAD modeling, and visual identity systems (logos, brand guidelines, digital/print collateral) for private clients and institutions.",
+        "Developed physical products, bespoke custom furniture, parametric 3D CAD models, and visual identity systems (logos, brand guidelines, digital/print collateral) for private clients and institutions.",
       "casino-arena":
-        "Over a decade of face-to-face service in high-pressure environments. Zero-error cash reconciliation, shift leadership, immediate conflict resolution, and VIP guest retention.",
+        "Engaged face-to-face with guests in high-pressure environments for over a decade. Managed zero-error cash reconciliation, led shift operations, resolved real-time conflicts, and drove VIP retention.",
     },
     coderhouseShortItems: [
       "Advanced UX/UI — Design Systems, Variables, Handoff",

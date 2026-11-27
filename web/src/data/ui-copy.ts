@@ -44,7 +44,7 @@ export const uiCopy = {
       hideCase: "Ocultar caso de estudio",
       hideCaseAria: (title: string) => `Ocultar caso de estudio de ${title}`,
       challengeHeading: "El Desafío",
-      roleHeading: "Aportes y Rol de Alex",
+      roleHeading: "Mi rol y aportes",
       impactHeading: "Impacto y Resultado",
       stackHeading: "Stack de Diseño",
       galleryHeading: "Galería del Ecosistema",
@@ -63,7 +63,7 @@ export const uiCopy = {
       overline: "03 / TRAYECTORIA PROFESIONAL",
       title: "Experiencia",
       subtitle:
-        "Experiencia en squads ágiles, consultoría independiente y operaciones de alto ritmo.",
+        "Recorrido entre squads ágiles de producto, consultoría independiente y operaciones de alto ritmo.",
     },
     education: {
       overline: "04 / FORMACIÓN ACADÉMICA & STACK TÉCNICO",
@@ -133,7 +133,7 @@ export const uiCopy = {
       hideCase: "Hide case study",
       hideCaseAria: (title: string) => `Hide case study for ${title}`,
       challengeHeading: "The Challenge",
-      roleHeading: "Alex's Role & Contributions",
+      roleHeading: "My Role & Contributions",
       impactHeading: "Impact & Outcome",
       stackHeading: "Design Stack",
       galleryHeading: "Ecosystem Gallery",
@@ -152,7 +152,7 @@ export const uiCopy = {
       overline: "03 / CAREER PATH",
       title: "Experience",
       subtitle:
-        "Experience across agile product squads, independent consulting, and fast-paced operations.",
+        "Journey across agile product squads, independent consulting, and fast-paced operations.",
     },
     education: {
       overline: "04 / ACADEMIC BACKGROUND & TECH STACK",
