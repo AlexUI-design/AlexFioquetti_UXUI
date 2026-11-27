@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { Maximize2 } from "lucide-react";
+import { ArrowUpRight, Maximize2 } from "lucide";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
+import { EditorialMorphIcon } from "@/components/ui/EditorialMorphIcon";
 import type { GalleryBlock, GalleryImage } from "@/data/cv-data";
 import { getUiCopy } from "@/data/ui-copy";
 
@@ -21,6 +23,8 @@ function ImageFrameButton({
   showCaption = true,
   sizes,
 }: ImageFrameButtonProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   const frameClassName =
     variant === "desktop"
       ? "relative aspect-[16/10] w-full overflow-hidden rounded-[2px] border border-hairline bg-paper"
@@ -36,6 +40,10 @@ function ImageFrameButton({
       <button
         type="button"
         onClick={() => onSelect(image)}
+        onPointerEnter={(e) => {
+          if (e.pointerType === "mouse") setIsHovered(true);
+        }}
+        onPointerLeave={() => setIsHovered(false)}
         className={`group block w-full cursor-zoom-in text-left ${frameClassName}`}
         aria-label={copy.expandAria(image.title)}
       >
@@ -48,9 +56,13 @@ function ImageFrameButton({
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute right-2.5 bottom-2.5 z-10 inline-flex h-7 w-7 items-center justify-center rounded-[2px] border border-hairline bg-paper/90 text-ink opacity-75 shadow-sm backdrop-blur-sm transition-all duration-200 [@media(hover:hover)]:translate-y-0.5 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:bg-paper [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:translate-y-0 [@media(hover:hover)]:group-focus-visible:opacity-100"
+          className="pointer-events-none absolute right-2.5 bottom-2.5 z-10 inline-flex h-7 w-7 items-center justify-center rounded-[2px] border border-hairline bg-paper/90 text-ink opacity-75 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover:bg-paper group-hover:opacity-100 group-focus-visible:opacity-100"
         >
-          <Maximize2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+          <EditorialMorphIcon
+            icon={isHovered ? Maximize2 : ArrowUpRight}
+            size={14}
+            strokeWidth={1.5}
+          />
         </span>
       </button>
       {showCaption && (

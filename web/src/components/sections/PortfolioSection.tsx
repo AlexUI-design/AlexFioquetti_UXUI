@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { ArrowUpRight as ArrowUpRightData, Maximize2 } from "lucide";
 import { ArrowUpRight } from "lucide-react";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
+import { EditorialMorphIcon } from "@/components/ui/EditorialMorphIcon";
 import { Lightbox } from "@/components/ui/Lightbox";
 import type { GalleryImage } from "@/data/cv-data";
 import { getLocalizedCvData } from "@/data/cv-data-en";
@@ -11,6 +13,8 @@ import { getUiCopy } from "@/data/ui-copy";
 
 export function PortfolioSection() {
   const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
+  const [isCoverHovered, setIsCoverHovered] = useState(false);
+  const [isExploreHovered, setIsExploreHovered] = useState(false);
   const { locale } = useAppPreferences();
   const { portfolioCases } = getLocalizedCvData(locale);
   const copy = getUiCopy(locale).portfolio;
@@ -28,6 +32,10 @@ export function PortfolioSection() {
           <button
             type="button"
             onClick={() => setLightboxImage(featuredCase.fullpage)}
+            onPointerEnter={(e) => {
+              if (e.pointerType === "mouse") setIsCoverHovered(true);
+            }}
+            onPointerLeave={() => setIsCoverHovered(false)}
             aria-label={copy.expandLandingAria(featuredCase.title)}
             className="group relative block aspect-[16/10] w-full cursor-zoom-in overflow-hidden rounded-[2px] border border-hairline bg-card-stage text-left"
           >
@@ -40,7 +48,11 @@ export function PortfolioSection() {
             />
             <span className="pointer-events-none absolute right-2.5 bottom-2.5 z-10 inline-flex items-center gap-1 rounded-[2px] border border-hairline bg-paper/90 px-2 py-1 font-mono text-[10px] tracking-wider text-ink backdrop-blur-sm transition-colors group-hover:bg-paper sm:right-3 sm:bottom-3 sm:px-2.5 sm:text-[11px]">
               {copy.expandPreview}
-              <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
+              <EditorialMorphIcon
+                icon={isCoverHovered ? Maximize2 : ArrowUpRightData}
+                size={12}
+                strokeWidth={1.5}
+              />
             </span>
           </button>
         </div>
@@ -81,10 +93,18 @@ export function PortfolioSection() {
             <button
               type="button"
               onClick={() => setLightboxImage(featuredCase.fullpage)}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse") setIsExploreHovered(true);
+              }}
+              onPointerLeave={() => setIsExploreHovered(false)}
               className="inline-flex items-center gap-1.5 rounded-[2px] border border-hairline bg-transparent px-5 py-2.5 font-mono text-xs tracking-wider text-ink transition-all hover:border-ink hover:bg-ink hover:text-paper"
             >
               <span>{copy.exploreFullLanding}</span>
-              <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <EditorialMorphIcon
+                icon={isExploreHovered ? Maximize2 : ArrowUpRightData}
+                size={14}
+                strokeWidth={1.5}
+              />
             </button>
           </div>
         </div>

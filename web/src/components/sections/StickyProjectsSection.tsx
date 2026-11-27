@@ -3,9 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpRight,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+} from "lucide";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
+import { EditorialMorphIcon } from "@/components/ui/EditorialMorphIcon";
 import { GalleryRenderer } from "@/components/ui/GalleryRenderer";
 import { Lightbox, type LightboxSectionTab } from "@/components/ui/Lightbox";
 import { SplitText } from "@/components/ui/SplitText";
@@ -46,6 +54,9 @@ function StickyProjectCard({
   const [isCollapsing, setIsCollapsing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [isStickyBarVisible, setIsStickyBarVisible] = useState(false);
+  const [isCoverHovered, setIsCoverHovered] = useState(false);
+  const [isExploreHovered, setIsExploreHovered] = useState(false);
+  const [isHideHovered, setIsHideHovered] = useState(false);
   const baseTop = 84 + index * 12;
 
   const cardRef = useRef<HTMLElement>(null);
@@ -131,12 +142,14 @@ function StickyProjectCard({
   const shouldStick = isDesktop && !keepInFlow;
 
   const handleOpen = () => {
+    setIsExploreHovered(false);
     setIsCollapsing(false);
     setIsOpen(true);
     onOpenChange(project.id, true);
   };
 
   const handleCollapseFromBar = () => {
+    setIsHideHovered(false);
     setIsCollapsing(true);
     setIsOpen(false);
     onOpenChange(project.id, false);
@@ -206,6 +219,10 @@ function StickyProjectCard({
         <button
           type="button"
           onClick={() => onOpenLightbox(project.cover)}
+          onPointerEnter={(e) => {
+            if (e.pointerType === "mouse") setIsCoverHovered(true);
+          }}
+          onPointerLeave={() => setIsCoverHovered(false)}
           aria-label={copy.expandCoverAria(project.title)}
           className="group relative block h-[200px] w-full cursor-zoom-in overflow-hidden rounded-[2px] border border-hairline bg-paper text-left sm:h-[38vh] sm:min-h-[240px] lg:h-[44vh] max-h-[440px]"
         >
@@ -226,7 +243,11 @@ function StickyProjectCard({
           </motion.div>
           <span className="pointer-events-none absolute right-2.5 bottom-2.5 z-10 inline-flex items-center gap-1 rounded-[2px] border border-hairline bg-paper/90 px-2 py-1 font-mono text-[10px] tracking-wider text-ink backdrop-blur-sm transition-colors group-hover:bg-paper sm:right-3 sm:bottom-3 sm:px-2.5 sm:text-[11px]">
             {copy.expandPreview}
-            <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
+            <EditorialMorphIcon
+              icon={isCoverHovered ? Maximize2 : ArrowUpRight}
+              size={12}
+              strokeWidth={1.5}
+            />
           </span>
         </button>
       </div>
@@ -248,11 +269,19 @@ function StickyProjectCard({
             <button
               type="button"
               onClick={handleOpen}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse") setIsExploreHovered(true);
+              }}
+              onPointerLeave={() => setIsExploreHovered(false)}
               aria-expanded={false}
               className="inline-flex w-full items-center justify-center gap-2 rounded-[2px] border border-ink bg-ink px-4 py-2.5 font-mono text-xs font-medium tracking-wider text-paper transition-opacity hover:opacity-85 sm:w-auto sm:px-5"
             >
               <span>{copy.exploreCase}</span>
-              <ChevronDown className="h-4 w-4" strokeWidth={1.75} />
+              <EditorialMorphIcon
+                icon={isExploreHovered ? ArrowDown : ChevronDown}
+                size={16}
+                strokeWidth={1.75}
+              />
             </button>
           )}
         </div>
@@ -414,12 +443,20 @@ function StickyProjectCard({
             <button
               type="button"
               onClick={handleCollapseFromBar}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse") setIsHideHovered(true);
+              }}
+              onPointerLeave={() => setIsHideHovered(false)}
               aria-expanded={true}
               aria-label={copy.hideCaseAria(project.title)}
               className="pointer-events-auto inline-flex items-center gap-2 rounded-[2px] border border-paper/25 bg-ink px-5 py-2.5 font-mono text-xs font-medium tracking-wider text-paper shadow-[0_12px_28px_-8px_rgba(23,23,21,0.45)] transition-opacity hover:opacity-90"
             >
               <span>{copy.hideCase}</span>
-              <ChevronUp className="h-4 w-4" strokeWidth={1.75} />
+              <EditorialMorphIcon
+                icon={isHideHovered ? ArrowUp : ChevronUp}
+                size={16}
+                strokeWidth={1.75}
+              />
             </button>
           </div>
         )}

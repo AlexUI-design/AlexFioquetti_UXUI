@@ -11,6 +11,10 @@
   --text-ghost: #e4e5dd;
   --surface-scrim: rgba(16, 16, 14, 0.78);
   --status-green: #0f8a5f;
+  --illos-dark: 0;
+  --illos-ground: var(--surface-paper);
+  --illos-ink: var(--text-ink);
+  --illos-accent: var(--status-green);
 }
 
 :root[data-theme="dark"] {
@@ -24,6 +28,10 @@
   --text-ghost: #232420;
   --surface-scrim: rgba(6, 6, 5, 0.88);
   --status-green: #34d399;
+  --illos-dark: 1;
+  --illos-ground: var(--surface-paper);
+  --illos-ink: var(--text-ink);
+  --illos-accent: var(--status-green);
 }
 
 @theme inline {

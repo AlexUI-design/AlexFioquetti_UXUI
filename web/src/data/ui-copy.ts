@@ -13,6 +13,7 @@ export const uiCopy = {
       ],
       downloadCv: "Descargar CV",
       downloadingCv: "Generando PDF...",
+      cvDownloaded: "CV descargado",
       cvError: "Error al descargar",
       letsTalk: "Hablemos",
       openMenu: "Abrir menú",
@@ -29,6 +30,10 @@ export const uiCopy = {
     hero: {
       quickNavTitle: "Índice de proyectos",
       quickNavAria: "Índice rápido de proyectos",
+      pipelineLabels: ["ESTRATEGIA", "DISEÑO", "ENTREGA"] as const,
+      pipelineTitle: "Proceso de producto: Estrategia, Diseño y Entrega",
+      pipelineDesc:
+        "Diagrama isométrico animado que recorre tres etapas en línea: estrategia, diseño y entrega.",
     },
     projects: {
       sectionOverline: "01 / PROYECTOS SELECCIONADOS",
@@ -94,6 +99,7 @@ export const uiCopy = {
       ],
       downloadCv: "Download CV",
       downloadingCv: "Generating PDF...",
+      cvDownloaded: "CV downloaded",
       cvError: "Download failed",
       letsTalk: "Let's talk",
       openMenu: "Open menu",
@@ -110,6 +116,10 @@ export const uiCopy = {
     hero: {
       quickNavTitle: "Project Index",
       quickNavAria: "Quick project index",
+      pipelineLabels: ["STRATEGY", "DESIGN", "DELIVERY"] as const,
+      pipelineTitle: "Product workflow: Strategy, Design, and Delivery",
+      pipelineDesc:
+        "Animated isometric diagram moving across three connected stages: strategy, design, and delivery.",
     },
     projects: {
       sectionOverline: "01 / SELECTED PROJECTS",

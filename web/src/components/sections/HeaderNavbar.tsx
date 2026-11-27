@@ -2,9 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, FileDown, Loader2, Menu, Moon, Sun, X } from "lucide-react";
+import {
+  Check,
+  CircleAlert,
+  FileDown,
+  LoaderCircle,
+  Menu,
+  Moon,
+  Sun,
+  X,
+} from "lucide";
+import { ArrowUpRight } from "lucide-react";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
+import { EditorialMorphIcon } from "@/components/ui/EditorialMorphIcon";
 import { getLocalizedCvData } from "@/data/cv-data-en";
 import { getUiCopy } from "@/data/ui-copy";
 import { EASE_EDITORIAL } from "@/lib/motion";
@@ -13,7 +24,7 @@ export function HeaderNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHiddenOnMobile, setIsHiddenOnMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cvStatus, setCvStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [cvStatus, setCvStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const lastScrollYRef = useRef(0);
 
   const prefersReducedMotion = useReducedMotion();
@@ -90,8 +101,9 @@ export function HeaderNavbar() {
   }, [isMenuOpen, stop, start]);
 
   useEffect(() => {
-    if (cvStatus !== "error") return;
-    const timeout = setTimeout(() => setCvStatus("idle"), 2800);
+    if (cvStatus !== "error" && cvStatus !== "success") return;
+    const delay = cvStatus === "success" ? 2200 : 2800;
+    const timeout = setTimeout(() => setCvStatus("idle"), delay);
     return () => clearTimeout(timeout);
   }, [cvStatus]);
 
@@ -135,9 +147,9 @@ export function HeaderNavbar() {
 
       // Keep blob URL alive 60s so Save As dialogs & mobile download managers finish cleanly
       setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
-      setCvStatus("idle");
+      setCvStatus("success");
       if (closeMobileMenu) {
-        setIsMenuOpen(false);
+        setTimeout(() => setIsMenuOpen(false), 850);
       }
     } catch {
       setCvStatus("error");
@@ -147,9 +159,20 @@ export function HeaderNavbar() {
   const cvButtonLabel =
     cvStatus === "loading"
       ? copy.downloadingCv
-      : cvStatus === "error"
-        ? copy.cvError
-        : copy.downloadCv;
+      : cvStatus === "success"
+        ? copy.cvDownloaded
+        : cvStatus === "error"
+          ? copy.cvError
+          : copy.downloadCv;
+
+  const cvButtonIcon =
+    cvStatus === "loading"
+      ? LoaderCircle
+      : cvStatus === "success"
+        ? Check
+        : cvStatus === "error"
+          ? CircleAlert
+          : FileDown;
 
   const handleMobileNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     event.preventDefault();
@@ -235,11 +258,7 @@ export function HeaderNavbar() {
               title={isDark ? copy.switchToLight : copy.switchToDark}
               className="inline-flex h-8 w-8 items-center justify-center rounded-[2px] border border-hairline text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
             >
-              {isDark ? (
-                <Moon className="h-3.5 w-3.5" strokeWidth={1.65} />
-              ) : (
-                <Sun className="h-3.5 w-3.5" strokeWidth={1.65} />
-              )}
+              <EditorialMorphIcon icon={isDark ? Moon : Sun} size={14} strokeWidth={1.65} />
             </button>
 
             <button
@@ -250,11 +269,12 @@ export function HeaderNavbar() {
               aria-live="polite"
               className="inline-flex h-8 items-center gap-1.5 rounded-[2px] border border-hairline px-3 font-mono text-[11px] tracking-wider text-ink transition-all hover:border-ink hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-70"
             >
-              {cvStatus === "loading" ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={1.6} />
-              ) : (
-                <FileDown className="h-3.5 w-3.5" strokeWidth={1.5} />
-              )}
+              <EditorialMorphIcon
+                icon={cvButtonIcon}
+                size={14}
+                strokeWidth={1.55}
+                className={cvStatus === "loading" ? "shrink-0 animate-spin" : "shrink-0"}
+              />
               <span>{cvButtonLabel}</span>
             </button>
 
@@ -276,11 +296,7 @@ export function HeaderNavbar() {
             aria-label={isMenuOpen ? copy.closeMenu : copy.openMenu}
             className="inline-flex h-9 w-9 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink transition-colors hover:border-ink lg:hidden"
           >
-            {isMenuOpen ? (
-              <X className="h-4 w-4" strokeWidth={1.75} />
-            ) : (
-              <Menu className="h-4 w-4" strokeWidth={1.75} />
-            )}
+            <EditorialMorphIcon icon={isMenuOpen ? X : Menu} size={16} strokeWidth={1.75} />
           </button>
         </div>
       </header>
@@ -339,11 +355,7 @@ export function HeaderNavbar() {
                     </span>
                   </div>
                   <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-hairline bg-paper text-ink">
-                    {isDark ? (
-                      <Moon className="h-4 w-4" strokeWidth={1.65} />
-                    ) : (
-                      <Sun className="h-4 w-4" strokeWidth={1.65} />
-                    )}
+                    <EditorialMorphIcon icon={isDark ? Moon : Sun} size={16} strokeWidth={1.65} />
                   </span>
                 </button>
 
@@ -381,11 +393,12 @@ export function HeaderNavbar() {
                   aria-live="polite"
                   className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[2px] border border-hairline bg-paper px-4 font-mono text-xs tracking-wider text-ink transition-colors hover:border-ink disabled:cursor-wait disabled:opacity-70"
                 >
-                  {cvStatus === "loading" ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={1.6} />
-                  ) : (
-                    <FileDown className="h-3.5 w-3.5" strokeWidth={1.5} />
-                  )}
+                  <EditorialMorphIcon
+                    icon={cvButtonIcon}
+                    size={14}
+                    strokeWidth={1.55}
+                    className={cvStatus === "loading" ? "shrink-0 animate-spin" : "shrink-0"}
+                  />
                   <span>{cvButtonLabel}</span>
                 </button>
 
