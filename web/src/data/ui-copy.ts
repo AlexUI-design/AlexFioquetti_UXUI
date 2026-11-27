@@ -27,6 +27,7 @@ export const uiCopy = {
       switchLanguageAria: "Cambiar idioma entre Español e Inglés",
     },
     hero: {
+      quickNavTitle: "Índice de proyectos",
       quickNavAria: "Índice rápido de proyectos",
     },
     projects: {
@@ -107,6 +108,7 @@ export const uiCopy = {
       switchLanguageAria: "Switch language between Spanish and English",
     },
     hero: {
+      quickNavTitle: "Project Index",
       quickNavAria: "Quick project index",
     },
     projects: {

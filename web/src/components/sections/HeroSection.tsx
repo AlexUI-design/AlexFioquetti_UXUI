@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowDownRight } from "lucide-react";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { SplitText } from "@/components/ui/SplitText";
@@ -15,25 +14,14 @@ const quickNavProjects = [
 ] as const;
 
 export function HeroSection() {
-  const prefersReducedMotion = useReducedMotion();
   const { locale } = useAppPreferences();
   const { heroData } = getLocalizedCvData(locale);
   const copy = getUiCopy(locale).hero;
-  const { scrollY } = useScroll();
-  const watermarkY = useTransform(scrollY, [0, 600], [0, 80]);
 
   return (
-    <section className="relative mx-auto flex min-h-[62svh] max-w-[1520px] flex-col justify-between overflow-x-clip px-4 pt-7 pb-6 sm:min-h-[min(78svh,680px)] sm:px-8 sm:pt-12 sm:pb-8 lg:px-10">
-      <motion.div
-        aria-hidden="true"
-        style={{ y: prefersReducedMotion ? 0 : watermarkY }}
-        className="pointer-events-none absolute top-8 right-4 select-none font-serif text-[clamp(140px,24vw,350px)] leading-none font-normal tracking-[-0.05em] text-ghost/55 will-change-transform sm:top-5 sm:right-8"
-      >
-        AF
-      </motion.div>
-
-      {/* Top zone: Overline, simplified headline, and compact bio directly underneath */}
-      <div className="relative z-10 pt-1 sm:pt-3">
+    <section className="relative mx-auto flex min-h-[calc(100svh-57px)] max-w-[1520px] flex-col justify-between overflow-x-clip px-4 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10 md:min-h-[calc(100svh-73px)] lg:px-10">
+      {/* Center focal zone: Overline, display headline, and concise bio */}
+      <div className="relative z-10 flex flex-1 flex-col justify-center py-8 sm:py-12">
         <div className="mb-3 sm:mb-4">
           <span className="font-mono text-xs tracking-wider text-muted">
             {heroData.overline}
@@ -43,16 +31,20 @@ export function HeroSection() {
         <SplitText
           lines={heroData.headlineLines}
           as="h1"
-          className="font-serif text-[clamp(36px,7vw,82px)] leading-[1.03] font-normal tracking-[-0.03em] text-ink"
+          className="text-balance font-serif text-[clamp(38px,6.8vw,84px)] leading-[1.03] font-normal tracking-[-0.03em] text-ink"
         />
 
-        <p className="mt-4 max-w-xl font-sans text-[14px] leading-[1.48] text-body sm:mt-5 sm:text-[15.5px] sm:leading-[1.5]">
+        <p className="mt-4 max-w-2xl font-sans text-[14.5px] leading-[1.52] text-body sm:mt-6 sm:text-[16px] sm:leading-[1.58]">
           {heroData.bio}
         </p>
       </div>
 
-      {/* Bottom zone: 4 featured projects directly above the hero closing hairline */}
-      <div className="relative z-10 mt-10 border-b border-hairline pb-5 sm:mt-14 sm:pb-7">
+      {/* Bottom anchored zone: Project Index heading + 4 quick-jump links (no duplicate closing border) */}
+      <div className="relative z-10 pt-4 sm:pt-6">
+        <h2 className="mb-3 font-serif text-[17px] leading-snug font-normal tracking-[-0.01em] text-ink sm:mb-3.5 sm:text-[19px]">
+          {copy.quickNavTitle}
+        </h2>
+
         <nav
           aria-label={copy.quickNavAria}
           className="grid grid-cols-1 gap-x-10 gap-y-2.5 font-mono text-xs md:grid-cols-2 lg:gap-x-16"
@@ -61,7 +53,7 @@ export function HeroSection() {
             <a
               key={item.href}
               href={item.href}
-              className="group flex items-center justify-between border-b border-hairline/70 pb-2 text-muted transition-colors hover:border-ink hover:text-ink"
+              className="group flex items-center justify-between border-b border-hairline/70 pb-2.5 text-muted transition-colors hover:border-ink hover:text-ink"
             >
               <span className="tracking-wider">{item.label}</span>
               <ArrowDownRight
