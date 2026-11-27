@@ -849,7 +849,7 @@ export const educationData: EducationEntry[] = [
     institution: "Universidad Nacional de Cuyo (UNCuyo)",
     degree: "Diseñador Industrial (Título Universitario de Grado)",
     period: "2009 — 2018",
-    highlight: "Promedio: 8.46 / 10 · Graduado con Diploma",
+    highlight: "Graduado con Diploma",
     details: [
       "Metodología proyectual, investigación empírica de campo, ergonomía física y cognitiva, análisis morfológico y viabilidad constructiva.",
     ],
@@ -859,12 +859,12 @@ export const educationData: EducationEntry[] = [
     institution: "Coderhouse",
     degree: "Ciclo Integral de Especialización UX/UI",
     period: "2024 — 2025",
-    highlight: "Calificaciones: 8.5 a 10",
+    highlight: "",
     details: [
-      "Diseñador UX/UI Avanzado — Nota: 10 / 10 (Design Systems, Variables, Developer Handoff)",
-      "Curso de UX Writing — Nota: 9.0 / 10 (Microcopy, Tone & Voice, Diseño Conversacional)",
-      "UX Research — Nota: 8.5 / 10 (Entrevistas, Triangulación de datos, Discovery)",
-      "Diseñador UX/UI — Nota: 9.5 / 10 (Ciclo completo de producto, User Flows, Figma)",
+      "Diseñador UX/UI Avanzado (Design Systems, Variables, Developer Handoff)",
+      "Curso de UX Writing (Microcopy, Tone & Voice, Diseño Conversacional)",
+      "UX Research (Entrevistas, Triangulación de datos, Discovery)",
+      "Diseñador UX/UI (Ciclo completo de producto, User Flows, Figma)",
     ],
   },
 ];
@@ -898,8 +898,18 @@ export const stackCategories: StackCategory[] = [
   },
   {
     id: "ai",
-    title: "Inteligencia Artificial Aplicada",
-    items: ["Claude", "ChatGPT", "Google Gemini", "NotebookLM"],
+    title: "Inteligencia Artificial",
+    items: [
+      "Claude",
+      "ChatGPT",
+      "Gemini",
+      "NotebookLM",
+      "Antigravity Agente",
+      "Antigravity IDE",
+      "MCP",
+      "Skills",
+      "Agentes",
+    ],
   },
   {
     id: "industrial-graphics",

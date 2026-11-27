@@ -15,6 +15,10 @@
   --illos-ground: var(--surface-paper);
   --illos-ink: var(--text-ink);
   --illos-accent: var(--status-green);
+  --illos-if-raised: #f8f8f4;
+  --illos-if-surface: var(--surface-card-stage);
+  --illos-if-line: var(--border-hairline);
+  --illos-if-bar: #dcdcd3;
 }
 
 :root[data-theme="dark"] {
@@ -32,6 +36,10 @@
   --illos-ground: var(--surface-paper);
   --illos-ink: var(--text-ink);
   --illos-accent: var(--status-green);
+  --illos-if-raised: #1a1b18;
+  --illos-if-surface: #22231f;
+  --illos-if-line: var(--border-hairline);
+  --illos-if-bar: #2c2d28;
 }
 
 @theme inline {

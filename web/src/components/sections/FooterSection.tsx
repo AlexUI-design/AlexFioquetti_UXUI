@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
+import { IllosNoLiveVisitors } from "@/components/illos/no-live-visitors";
 import { useAppPreferences } from "@/components/providers/AppPreferencesProvider";
 import { getLocalizedCvData } from "@/data/cv-data-en";
 import { getUiCopy } from "@/data/ui-copy";
@@ -23,43 +24,56 @@ export function FooterSection() {
       id="contacto"
       className="mx-auto max-w-[1520px] border-t border-hairline px-4 pt-12 pb-8 sm:px-8 sm:pt-24 sm:pb-12"
     >
-      <span className="font-mono text-xs tracking-wider text-muted">{copy.overline}</span>
+      <div className="grid grid-cols-1 items-center gap-8 pb-10 sm:gap-10 sm:pb-16 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-7">
+          <span className="font-mono text-xs tracking-wider text-muted">{copy.overline}</span>
 
-      <div className="mt-4 sm:mt-6">
-        <a
-          href={`mailto:${personalInfo.email}`}
-          className="group relative inline-flex items-center gap-2 border-b border-hairline pb-2 font-serif text-[clamp(20px,3.2vw,40px)] font-normal break-all text-ink after:absolute after:right-0 after:-bottom-[1px] after:left-0 after:h-[1.5px] after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-300 hover:after:scale-x-100 sm:break-normal"
-        >
-          <span>{personalInfo.email}</span>
-          <ArrowUpRight
-            className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-6 sm:w-6"
-            strokeWidth={1.5}
+          <div className="mt-4 sm:mt-6">
+            <a
+              href={`mailto:${personalInfo.email}`}
+              className="group relative inline-flex items-center gap-2 border-b border-hairline pb-2 font-serif text-[clamp(20px,3.2vw,40px)] font-normal break-all text-ink after:absolute after:right-0 after:-bottom-[1px] after:left-0 after:h-[1.5px] after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-300 hover:after:scale-x-100 sm:break-normal"
+            >
+              <span>{personalInfo.email}</span>
+              <ArrowUpRight
+                className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-6 sm:w-6"
+                strokeWidth={1.5}
+              />
+            </a>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-5 sm:mt-12 sm:gap-8">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-1 font-mono text-xs tracking-wider text-muted transition-colors duration-150 hover:text-ink"
+              >
+                <span>[ {link.label}</span>
+                <ArrowUpRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  strokeWidth={1.5}
+                />
+                <span>]</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center lg:col-span-5 lg:justify-end">
+          <IllosNoLiveVisitors
+            loop
+            title={copy.illustrationTitle}
+            description={copy.illustrationDesc}
+            className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[460px]"
           />
-        </a>
-      </div>
-
-      <div className="mt-8 mb-10 flex flex-wrap gap-5 sm:mt-12 sm:mb-16 sm:gap-8">
-        {socialLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-1 font-mono text-xs tracking-wider text-muted transition-colors duration-150 hover:text-ink"
-          >
-            <span>[ {link.label}</span>
-            <ArrowUpRight
-              className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              strokeWidth={1.5}
-            />
-            <span>]</span>
-          </a>
-        ))}
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-hairline pt-6 font-mono text-xs tracking-wider text-muted">
         <span>
-          © {currentYear} {personalInfo.fullName} · MENDOZA, AR / 32°53&apos;S 68°51&apos;W
+          © {currentYear} {personalInfo.fullName} · MENDOZA, AR
         </span>
         <span>{personalInfo.roleTitle}</span>
       </div>

@@ -72,6 +72,9 @@ export const uiCopy = {
     footer: {
       overline: "05 / CONTACTO & CONEXIÓN DIRECTA",
       headline: "Construyamos algo con sentido.",
+      illustrationTitle: "Canales de contacto directo: WhatsApp, LinkedIn y Behance",
+      illustrationDesc:
+        "Panel animado de contacto con indicador de disponibilidad activo y tarjetas deslizantes de WhatsApp, LinkedIn y Behance.",
     },
     lightbox: {
       prevAria: "Captura anterior",
@@ -158,6 +161,9 @@ export const uiCopy = {
     footer: {
       overline: "05 / CONTACT & DIRECT REACH",
       headline: "Let's build something meaningful.",
+      illustrationTitle: "Direct contact channels: WhatsApp, LinkedIn, and Behance",
+      illustrationDesc:
+        "Animated contact panel with live availability dot and sliding channel cards for WhatsApp, LinkedIn, and Behance.",
     },
     lightbox: {
       prevAria: "Previous capture",

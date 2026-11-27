@@ -91,10 +91,10 @@ const PDF_LABELS: Record<Locale, PdfLabels> = {
         "Más de una década en atención cara a cara en escenarios de alta presión. Arqueo de valores con cero error, liderazgo operativo de turnos, resolución inmediata de conflictos y fidelización de clientes VIP.",
     },
     coderhouseShortItems: [
-      "UX/UI Avanzado (10/10) — Design Systems, Variables, Handoff",
-      "UX/UI (9.5/10) — Ciclo completo de producto, Flows, Figma",
-      "UX Writing (9.0/10) — Microcopy, Tone & Voice, Bots",
-      "UX Research (8.5/10) — Entrevistas, Discovery, Triangulación",
+      "UX/UI Avanzado — Design Systems, Variables, Handoff",
+      "UX/UI — Ciclo completo de producto, Flows, Figma",
+      "UX Writing — Microcopy, Tone & Voice, Bots",
+      "UX Research — Entrevistas, Discovery, Triangulación",
     ],
   },
   en: {
@@ -149,10 +149,10 @@ const PDF_LABELS: Record<Locale, PdfLabels> = {
         "Over a decade of face-to-face service in high-pressure environments. Zero-error cash reconciliation, shift leadership, immediate conflict resolution, and VIP guest retention.",
     },
     coderhouseShortItems: [
-      "Advanced UX/UI (10/10) — Design Systems, Variables, Handoff",
-      "UX/UI Design (9.5/10) — Product Cycle, User Flows, Figma",
-      "UX Writing (9.0/10) — Microcopy, Tone & Voice, Bots",
-      "UX Research (8.5/10) — Interviews, Discovery, Triangulation",
+      "Advanced UX/UI — Design Systems, Variables, Handoff",
+      "UX/UI Design — Product Cycle, User Flows, Figma",
+      "UX Writing — Microcopy, Tone & Voice, Bots",
+      "UX Research — Interviews, Discovery, Triangulation",
     ],
   },
 };
@@ -421,8 +421,12 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
       leftY -= 10.8;
     }
 
-    pdf.drawText(edu.highlight, MARGIN_X, leftY, "sansBold", 7.6, COLOR_MUTED);
-    leftY -= 12;
+    if (edu.highlight.trim()) {
+      pdf.drawText(edu.highlight, MARGIN_X, leftY, "sansBold", 7.6, COLOR_MUTED);
+      leftY -= 12;
+    } else {
+      leftY -= 1.5;
+    }
 
     if (edu.id === "coderhouse") {
       for (const course of labels.coderhouseShortItems) {
@@ -451,10 +455,10 @@ export async function generateCvPdf(locale: Locale): Promise<Uint8Array> {
     rightY -= 11.4;
 
     const itemsText = category.items.join(" · ");
-    const itemLines = wrapText(itemsText, "sans", 7.9, rightColWidth, 3);
+    const itemLines = wrapText(itemsText, "sans", 7.9, rightColWidth, 4);
     for (const line of itemLines) {
       pdf.drawText(line, rightColX, rightY, "sans", 7.9, COLOR_BODY);
-      rightY -= 10.8;
+      rightY -= 10.6;
     }
 
     rightY -= 8.5;

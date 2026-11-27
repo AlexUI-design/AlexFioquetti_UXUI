@@ -29,9 +29,11 @@ export function EducationStackSection() {
           <div key={edu.id} className="border-t border-hairline pt-4 sm:pt-6">
             <div className="flex flex-wrap items-baseline justify-between gap-1.5 sm:gap-2">
               <span className="font-mono text-xs tracking-wider text-muted">{edu.period}</span>
-              <span className="font-mono text-[11px] tracking-wider text-muted">
-                {edu.highlight}
-              </span>
+              {edu.highlight ? (
+                <span className="font-mono text-[11px] tracking-wider text-muted">
+                  {edu.highlight}
+                </span>
+              ) : null}
             </div>
 
             <h3 className="mt-2 font-serif text-xl leading-snug font-normal text-ink sm:mt-3 sm:text-[28px]">

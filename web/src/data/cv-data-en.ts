@@ -765,7 +765,7 @@ const educationDataEn: EducationEntry[] = [
     institution: "Universidad Nacional de Cuyo (UNCuyo)",
     degree: "Industrial Designer (Bachelor's Degree)",
     period: "2009 — 2018",
-    highlight: "GPA: 8.46 / 10 · Graduated with Honors",
+    highlight: "Graduated with Diploma",
     details: [
       "Design methodology, empirical field research, physical and cognitive ergonomics, morphological analysis, and manufacturing feasibility.",
     ],
@@ -775,12 +775,12 @@ const educationDataEn: EducationEntry[] = [
     institution: "Coderhouse",
     degree: "Comprehensive UX/UI Specialization Track",
     period: "2024 — 2025",
-    highlight: "Grades: 8.5 to 10",
+    highlight: "",
     details: [
-      "Advanced UX/UI Design — Score: 10 / 10 (Design Systems, Variables, Developer Handoff)",
-      "UX Writing Course — Score: 9.0 / 10 (Microcopy, Tone & Voice, Conversational Design)",
-      "UX Research — Score: 8.5 / 10 (Interviews, Data Triangulation, Discovery)",
-      "UX/UI Design — Score: 9.5 / 10 (End-to-End Product Cycle, User Flows, Figma)",
+      "Advanced UX/UI Design (Design Systems, Variables, Developer Handoff)",
+      "UX Writing Course (Microcopy, Tone & Voice, Conversational Design)",
+      "UX Research (Interviews, Data Triangulation, Discovery)",
+      "UX/UI Design (End-to-End Product Cycle, User Flows, Figma)",
     ],
   },
 ];
@@ -814,8 +814,18 @@ const stackCategoriesEn: StackCategory[] = [
   },
   {
     id: "ai",
-    title: "Applied AI",
-    items: ["Claude", "ChatGPT", "Google Gemini", "NotebookLM"],
+    title: "Artificial Intelligence",
+    items: [
+      "Claude",
+      "ChatGPT",
+      "Gemini",
+      "NotebookLM",
+      "Antigravity Agent",
+      "Antigravity IDE",
+      "MCP",
+      "Skills",
+      "Agents",
+    ],
   },
   {
     id: "industrial-graphics",
